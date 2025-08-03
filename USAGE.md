@@ -338,7 +338,6 @@ npx @neabyte/chart-to-image --symbol ETH/USDT --output weekly.png --timeframe 1d
 |--------|-----------|---------|------|----------|
 | PNG | `.png` | High | Medium | Web, printing |
 | JPEG | `.jpg`, `.jpeg` | Good | Small | Web, sharing |
-| PNG | `.png` | Raster | High | Web, printing |
 
 ### 📄 Format Examples
 
@@ -348,9 +347,6 @@ npx @neabyte/chart-to-image --symbol BTC/USDT --output chart.png
 
 # JPEG (compressed)
 npx @neabyte/chart-to-image --symbol ETH/USDT --output chart.jpg
-
-# PNG (high quality)
-npx @neabyte/chart-to-image --symbol ADA/USDT --output chart.png
 ```
 
 ## ⚠️ Error Handling

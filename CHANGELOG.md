@@ -5,6 +5,13 @@ All notable changes to the Chart-To-Image library will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-08-04
+
+### 🔧 Fixed
+- **Package Size**: Reduced from 191.7 kB to 26.7 kB by excluding source files
+- **Documentation**: Fixed duplicate PNG entries in USAGE.md
+- **Build Process**: Clean TypeScript compilation with Terser minification
+
 ## [1.0.0] - 2025-08-04
 
 ### 🎉 Initial Release
