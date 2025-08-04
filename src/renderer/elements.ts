@@ -8,9 +8,10 @@
  */
 
 import type { CanvasRenderingContext2D } from 'canvas'
+
 import type { ChartDimensions, PriceRange, WatermarkConfig } from '@/renderer/types'
-import type { ChartOptions, HorizontalLevel } from '@/types/types'
 import { formatPrice, formatTime } from '@/renderer/utils'
+import type { ChartOptions, HorizontalLevel } from '@/types/types'
 
 /**
  * OHLC candle data structure for chart rendering
@@ -358,11 +359,12 @@ export class VWAPRenderer {
     this.ctx.lineWidth = 2
     this.ctx.setLineDash([5, 5])
     this.ctx.beginPath()
-    vwapData.forEach((point) => {
+    vwapData.forEach(point => {
       const originalIndex = ohlc.findIndex(candle => candle.time === point.time)
       if (originalIndex !== -1) {
         const x = this.dimensions.margin.left + originalIndex * spacing + spacing / 2
-        const y = this.dimensions.margin.top + 
+        const y =
+          this.dimensions.margin.top +
           ((this.priceRange.maxPrice - point.value) / this.priceRange.priceRange) * this.dimensions.chartHeight
         if (originalIndex === 0) {
           this.ctx.moveTo(x, y)
@@ -474,11 +476,12 @@ export class EMARenderer {
     this.ctx.lineWidth = 2
     this.ctx.setLineDash([])
     this.ctx.beginPath()
-    emaData.forEach((point) => {
+    emaData.forEach(point => {
       const originalIndex = ohlc.findIndex(candle => candle.time === point.time)
       if (originalIndex !== -1) {
         const x = this.dimensions.margin.left + originalIndex * spacing + spacing / 2
-        const y = this.dimensions.margin.top + 
+        const y =
+          this.dimensions.margin.top +
           ((this.priceRange.maxPrice - point.value) / this.priceRange.priceRange) * this.dimensions.chartHeight
         if (originalIndex === 0) {
           this.ctx.moveTo(x, y)
@@ -583,11 +586,12 @@ export class SMARenderer {
     this.ctx.lineWidth = 2
     this.ctx.setLineDash([])
     this.ctx.beginPath()
-    smaData.forEach((point) => {
+    smaData.forEach(point => {
       const originalIndex = ohlc.findIndex(candle => candle.time === point.time)
       if (originalIndex !== -1) {
         const x = this.dimensions.margin.left + originalIndex * spacing + spacing / 2
-        const y = this.dimensions.margin.top + 
+        const y =
+          this.dimensions.margin.top +
           ((this.priceRange.maxPrice - point.value) / this.priceRange.priceRange) * this.dimensions.chartHeight
         if (originalIndex === 0) {
           this.ctx.moveTo(x, y)

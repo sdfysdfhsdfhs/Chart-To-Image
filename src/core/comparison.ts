@@ -5,7 +5,7 @@
  * Handles data fetching, chart rendering, and layout coordination
  * for comprehensive trading chart comparisons with support for
  * different layouts, timeframes, and visual customization.
- * 
+ *
  * Supports timeframe comparison mode for analyzing the same symbol
  * across different time intervals.
  */
@@ -19,7 +19,7 @@ import { DataProvider } from '@/utils/provider'
 
 /**
  * Configuration for chart comparison operations
- * 
+ *
  * Defines parameters for generating multi-chart comparisons including
  * symbols, timeframes, layout options, and visual customization.
  */
@@ -69,7 +69,7 @@ export interface ComparisonConfig {
 
 /**
  * Result of chart comparison operation
- * 
+ *
  * Contains the outcome of comparison generation including success status,
  * output file path, error information, and image buffer data.
  */
@@ -91,7 +91,7 @@ export interface ComparisonResult {
  * Handles data fetching, chart rendering, and layout coordination
  * for comprehensive trading chart comparisons with support for
  * different layouts, timeframes, and visual customization.
- * 
+ *
  * Provides static methods for common comparison patterns including
  * side-by-side layouts, grid arrangements, and timeframe analysis.
  */
@@ -120,7 +120,7 @@ export class ComparisonService {
    * and combines them into a comparison layout. Supports both
    * side-by-side and grid layouts with synchronized timeframes.
    * Handles timeframe comparison mode when timeframes array is provided.
-   * 
+   *
    * The method automatically detects comparison mode based on configuration:
    * - If timeframes array is provided: timeframe comparison mode
    * - Otherwise: symbol comparison mode
@@ -130,7 +130,12 @@ export class ComparisonService {
    */
   public async generateComparison(): Promise<ComparisonResult> {
     try {
-      const { symbols, layout = { type: ComparisonService.DEFAULT_LAYOUT_TYPE }, width = 1600, height = 800 } = this.config
+      const {
+        symbols,
+        layout = { type: ComparisonService.DEFAULT_LAYOUT_TYPE },
+        width = 1600,
+        height = 800
+      } = this.config
       const comparisonRenderer = new ComparisonRenderer(width, height, layout)
       await this.addChartsToRenderer(comparisonRenderer, symbols)
       await comparisonRenderer.renderComparison()
@@ -143,10 +148,10 @@ export class ComparisonService {
 
   /**
    * Adds charts to the comparison renderer based on configuration
-   * 
+   *
    * Determines whether to add timeframe-based or symbol-based charts
    * based on the presence of timeframes in the configuration.
-   * 
+   *
    * @param comparisonRenderer - The comparison renderer instance
    * @param symbols - Array of trading symbols to process
    */
@@ -160,10 +165,10 @@ export class ComparisonService {
 
   /**
    * Adds timeframe-based charts to the renderer
-   * 
+   *
    * Creates charts for the same symbol across different timeframes.
    * Limits the number of charts to the minimum of symbols and timeframes.
-   * 
+   *
    * @param comparisonRenderer - The comparison renderer instance
    * @param symbols - Array of trading symbols to process
    */
@@ -181,10 +186,10 @@ export class ComparisonService {
 
   /**
    * Adds symbol-based charts to the renderer
-   * 
+   *
    * Creates individual charts for each trading symbol in the array.
    * Each chart uses the default timeframe from the configuration.
-   * 
+   *
    * @param comparisonRenderer - The comparison renderer instance
    * @param symbols - Array of trading symbols to process
    */
@@ -199,10 +204,10 @@ export class ComparisonService {
 
   /**
    * Creates a successful comparison result
-   * 
+   *
    * Handles file writing when output path is specified and returns
    * the appropriate result structure with success status and data.
-   * 
+   *
    * @param buffer - Image buffer containing the comparison chart
    * @returns Promise resolving to successful comparison result
    */
@@ -224,10 +229,10 @@ export class ComparisonService {
 
   /**
    * Creates an error result
-   * 
+   *
    * Formats error information into a standardized result structure
    * with appropriate error message handling.
-   * 
+   *
    * @param error - The error that occurred during processing
    * @returns Error result with failure status and error message
    */
@@ -259,7 +264,8 @@ export class ComparisonService {
         width: 800,
         height: 600,
         theme: this.config.theme || 'dark',
-        chartType: (this.config.chartType as 'candlestick' | 'line' | 'area' | 'heikin-ashi' | 'renko') || 'candlestick',
+        chartType:
+          (this.config.chartType as 'candlestick' | 'line' | 'area' | 'heikin-ashi' | 'renko') || 'candlestick',
         showTitle: true,
         showTimeAxis: true,
         showGrid: true
@@ -344,7 +350,11 @@ export class ComparisonService {
    * @returns Promise resolving to comparison result with success status
    * @throws {Error} When comparison generation fails
    */
-  public static async sideBySide(symbols: string[], outputPath: string, config?: Partial<ComparisonConfig>): Promise<ComparisonResult> {
+  public static async sideBySide(
+    symbols: string[],
+    outputPath: string,
+    config?: Partial<ComparisonConfig>
+  ): Promise<ComparisonResult> {
     const service = new ComparisonService({
       symbols,
       outputPath,
@@ -426,4 +436,4 @@ export class ComparisonService {
     })
     return service.generateComparison()
   }
-} 
+}

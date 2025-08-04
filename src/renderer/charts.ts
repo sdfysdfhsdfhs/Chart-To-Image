@@ -8,6 +8,7 @@
  */
 
 import type { CanvasRenderingContext2D } from 'canvas'
+
 import type { ChartDimensions, PriceRange } from '@/renderer/types'
 import type { ChartOptions } from '@/types/types'
 
@@ -468,16 +469,14 @@ export class LineBreakRenderer extends ChartTypeRenderer {
           direction: 'up'
         })
         currentHigh = candle.high
-      }
-      else if (candle.low < currentLow) {
+      } else if (candle.low < currentLow) {
         lineBreakPoints.push({
           time: candle.time,
           price: candle.low,
           direction: 'down'
         })
         currentLow = candle.low
-      }
-      else {
+      } else {
         lastPoint.price = candle.close
         lastPoint.time = candle.time
       }
@@ -508,25 +507,37 @@ export class LineBreakRenderer extends ChartTypeRenderer {
     for (let i = 1; i < lineBreakData.length; i++) {
       const prevPoint = lineBreakData[i - 1]
       const currentPoint = lineBreakData[i]
-      const x1 = this.dimensions.margin.left + (prevPoint.time - candles[0].time) / (candles[candles.length - 1].time - candles[0].time) * this.dimensions.chartWidth
+      const x1 =
+        this.dimensions.margin.left +
+        ((prevPoint.time - candles[0].time) / (candles[candles.length - 1].time - candles[0].time)) *
+          this.dimensions.chartWidth
       const y1 = this.dimensions.margin.top + ((maxPrice - prevPoint.price) / priceRange) * this.dimensions.chartHeight
-      const x2 = this.dimensions.margin.left + (currentPoint.time - candles[0].time) / (candles[candles.length - 1].time - candles[0].time) * this.dimensions.chartWidth
-      const y2 = this.dimensions.margin.top + ((maxPrice - currentPoint.price) / priceRange) * this.dimensions.chartHeight
-      const color = currentPoint.direction === 'up'
-        ? this.config.customBarColors?.bullish || '#26a69a'
-        : this.config.customBarColors?.bearish || '#ef5350'
+      const x2 =
+        this.dimensions.margin.left +
+        ((currentPoint.time - candles[0].time) / (candles[candles.length - 1].time - candles[0].time)) *
+          this.dimensions.chartWidth
+      const y2 =
+        this.dimensions.margin.top + ((maxPrice - currentPoint.price) / priceRange) * this.dimensions.chartHeight
+      const color =
+        currentPoint.direction === 'up'
+          ? this.config.customBarColors?.bullish || '#26a69a'
+          : this.config.customBarColors?.bearish || '#ef5350'
       this.ctx.strokeStyle = color
       this.ctx.beginPath()
       this.ctx.moveTo(x1, y1)
       this.ctx.lineTo(x2, y2)
       this.ctx.stroke()
     }
-    lineBreakData.forEach((point) => {
-      const x = this.dimensions.margin.left + (point.time - candles[0].time) / (candles[candles.length - 1].time - candles[0].time) * this.dimensions.chartWidth
+    lineBreakData.forEach(point => {
+      const x =
+        this.dimensions.margin.left +
+        ((point.time - candles[0].time) / (candles[candles.length - 1].time - candles[0].time)) *
+          this.dimensions.chartWidth
       const y = this.dimensions.margin.top + ((maxPrice - point.price) / priceRange) * this.dimensions.chartHeight
-      const color = point.direction === 'up'
-        ? this.config.customBarColors?.bullish || '#26a69a'
-        : this.config.customBarColors?.bearish || '#ef5350'
+      const color =
+        point.direction === 'up'
+          ? this.config.customBarColors?.bullish || '#26a69a'
+          : this.config.customBarColors?.bearish || '#ef5350'
       this.ctx.fillStyle = color
       this.ctx.beginPath()
       this.ctx.arc(x, y, 3, 0, 2 * Math.PI)

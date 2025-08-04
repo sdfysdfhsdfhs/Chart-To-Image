@@ -9,7 +9,14 @@
 
 import { createCanvas, Canvas, CanvasRenderingContext2D } from 'canvas'
 
-import { CandlestickRenderer, LineRenderer, AreaRenderer, HeikinAshiRenderer, RenkoRenderer, LineBreakRenderer } from '@/renderer/charts'
+import {
+  CandlestickRenderer,
+  LineRenderer,
+  AreaRenderer,
+  HeikinAshiRenderer,
+  RenkoRenderer,
+  LineBreakRenderer
+} from '@/renderer/charts'
 import {
   AxesRenderer,
   GridRenderer,

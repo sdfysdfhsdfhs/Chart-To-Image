@@ -8,6 +8,7 @@
  */
 
 import { createCanvas, Canvas, CanvasRenderingContext2D } from 'canvas'
+
 import { NodeChartRenderer } from '@/renderer'
 import type { NodeChartData } from '@/renderer/types'
 
@@ -144,7 +145,10 @@ export class ComparisonRenderer {
    * @param totalCharts - Total number of charts in the comparison
    * @returns Position coordinates and dimensions
    */
-  private calculatePosition(index: number, totalCharts?: number): { x: number; y: number; width: number; height: number } {
+  private calculatePosition(
+    index: number,
+    totalCharts?: number
+  ): { x: number; y: number; width: number; height: number } {
     const gap = this.layout.gap || 10
     if (this.layout.type === 'side-by-side') {
       const chartWidth = (this.width - gap) / Math.max(this.charts.length, 2)
@@ -190,7 +194,11 @@ export class ComparisonRenderer {
    * @param height - New chart height
    * @returns Adjusted margin configuration
    */
-  private adjustMargins(originalMargin: { top?: number; bottom?: number; left?: number; right?: number } | undefined, width: number, height: number): { top: number; bottom: number; left: number; right: number } {
+  private adjustMargins(
+    originalMargin: { top?: number; bottom?: number; left?: number; right?: number } | undefined,
+    width: number,
+    height: number
+  ): { top: number; bottom: number; left: number; right: number } {
     const scale = Math.min(width / 800, height / 600)
     const defaultMargin = { top: 60, bottom: 40, left: 60, right: 40 }
     const margin = originalMargin || defaultMargin
