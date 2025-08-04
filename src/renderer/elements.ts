@@ -8,11 +8,9 @@
  */
 
 import type { CanvasRenderingContext2D } from 'canvas'
-
-import type { ChartDimensions, PriceRange, WatermarkConfig } from './types'
-import { formatPrice, formatTime } from './utils'
-
+import type { ChartDimensions, PriceRange, WatermarkConfig } from '@/renderer/types'
 import type { ChartOptions, HorizontalLevel } from '@/types/types'
+import { formatPrice, formatTime } from '@/renderer/utils'
 
 /**
  * OHLC candle data structure for chart rendering

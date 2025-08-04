@@ -93,4 +93,7 @@ export async function quickChart(symbol: string, outputPath: string, options: an
     ...options
   }
   return await generateChartImage(config)
-} 
+}
+
+export { ComparisonService, type ComparisonConfig, type ComparisonResult } from './core/comparison'
+export { ComparisonRenderer, type ComparisonLayout } from './renderer/comparison' 

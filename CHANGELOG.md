@@ -5,12 +5,50 @@ All notable changes to the Chart-To-Image library will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-08-04
+
+### 🚀 Added
+- **Chart Comparison Feature**: Side-by-side and grid layouts for multiple symbols
+- **Timeframe Comparison**: Compare same symbol across different timeframes
+- **Comparison Customization**: Custom colors and themes for comparison charts
+- **Grid Layout Support**: 2x1 grid layout for focused comparison
+- **Comparison API**: `ComparisonService` for programmatic comparison generation
+- **Enhanced CLI**: New `--compare`, `--layout`, `--columns`, `--timeframes` arguments
+- **Error Handling**: Proper validation for comparison constraints (max 2 symbols/columns for grid)
+- **Documentation**: Comprehensive comparison examples and usage guides
+- **Visual Assets**: Professional comparison chart demos
+
+### 🎯 Features
+- **Symbol Comparison**: Compare different trading pairs side-by-side
+- **Timeframe Analysis**: Same symbol across multiple timeframes (1m to 1d)
+- **Grid Layout**: Organized 2-chart grid for correlation analysis
+- **Custom Colors**: Apply custom bar colors to comparison charts
+- **Theme Support**: Light/dark themes for comparison charts
+- **All Chart Types**: Candlestick, Line, Area, Heikin-Ashi, Renko in comparisons
+
+### 🔧 Technical
+- **Modular Architecture**: New `ComparisonRenderer` and `ComparisonService` classes
+- **Type Safety**: Full TypeScript support for comparison features
+- **Performance**: Optimized rendering for multiple charts
+- **Error Handling**: Robust validation and error messages
+- **CLI Integration**: Seamless integration with existing CLI interface
+
+### 📚 Documentation
+- **README**: Updated with comparison features and visual examples
+- **USAGE.md**: Comprehensive comparison usage guide
+- **Visual Demos**: Professional comparison chart examples
+- **API Examples**: Programmatic comparison usage
+
+---
+
 ## [1.0.1] - 2025-08-04
 
 ### 🔧 Fixed
 - **Package Size**: Reduced from 191.7 kB to 26.7 kB by excluding source files
 - **Documentation**: Fixed duplicate PNG entries in USAGE.md
 - **Build Process**: Clean TypeScript compilation with Terser minification
+
+---
 
 ## [1.0.0] - 2025-08-04
 

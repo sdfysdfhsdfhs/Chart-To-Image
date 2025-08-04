@@ -8,8 +8,7 @@
  */
 
 import { createCanvas, Canvas, CanvasRenderingContext2D } from 'canvas'
-
-import { CandlestickRenderer, LineRenderer, AreaRenderer, HeikinAshiRenderer, RenkoRenderer } from './charts'
+import { CandlestickRenderer, LineRenderer, AreaRenderer, HeikinAshiRenderer, RenkoRenderer } from '@/renderer/charts'
 import {
   AxesRenderer,
   GridRenderer,
@@ -17,10 +16,9 @@ import {
   LevelsRenderer,
   TitleRenderer,
   WatermarkRenderer
-} from './elements'
-import type { NodeChartData, ChartDimensions, PriceRange } from './types'
-import { calculatePriceRange, hasVolumeData } from './utils'
-
+} from '@/renderer/elements'
+import { calculatePriceRange, hasVolumeData } from '@/renderer/utils'
+import type { NodeChartData, ChartDimensions, PriceRange } from '@/renderer/types'
 import type { ChartOptions } from '@/types/types'
 
 /**

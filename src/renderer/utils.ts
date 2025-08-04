@@ -6,8 +6,7 @@
  * essential helper functions for chart generation and coordinate system setup.
  */
 
-import type { PriceRange } from './types'
-
+import type { PriceRange } from '@/renderer/types'
 import type { ChartOptions } from '@/types/types'
 
 /**

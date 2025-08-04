@@ -4,8 +4,6 @@ Convert trading charts to images using [Node.js Canvas](https://github.com/Autom
 
 ![Chart-To-Image Demo](assets/images/showcase.png)
 
-*Professional trading charts generated with Chart-To-Image: Candlestick, Line, Area, Heikin-Ashi, and Renko charts with custom themes and colors.*
-
 ## 📊 Chart Types Demo
 
 | Candlestick | Line | Area |
@@ -15,6 +13,12 @@ Convert trading charts to images using [Node.js Canvas](https://github.com/Autom
 | Heikin-Ashi | Renko |
 |-------------|-------|
 | ![Heikin-Ashi](assets/images/demo-heikin.png) | ![Renko](assets/images/demo-renko.png) |
+
+### 🔄 Comparison Charts
+
+![Symbol Comparison](assets/images/demo-comparison-1.png)
+
+![Timeframe Comparison](assets/images/demo-comparison-2.png)
 
 ---
 
@@ -34,6 +38,9 @@ Convert trading charts to images using [Node.js Canvas](https://github.com/Autom
 - 🎨 **Color Customization**: Hex, RGB, named colors, and gradients
 - 📏 **Scaling Options**: Auto-scaling and manual scale factors
 - 🔄 **Multiple Exchanges**: Binance, Kraken, Coinbase, and more
+- 🔄 **Chart Comparison**: Side-by-side and grid layouts for multiple symbols
+- ⏰ **Timeframe Comparison**: Same symbol across different timeframes
+- 🎨 **Comparison Customization**: Custom colors and themes for comparisons
 
 ## 🛠️ Technologies Used
 
@@ -69,6 +76,15 @@ npx @neabyte/chart-to-image -s BTC/USDT -o chart.png --theme dark --background-c
 npx @neabyte/chart-to-image -s ETH/USDT -o heikin-ashi.png --chart-type heikin-ashi
 npx @neabyte/chart-to-image -s BTC/USDT -o renko.png --chart-type renko
 
+# Chart comparison (side-by-side)
+npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --output comparison.png
+
+# Timeframe comparison (same symbol, different timeframes)
+npx @neabyte/chart-to-image --compare "BTC/USDT,BTC/USDT" --timeframes "1h,4h" --output timeframe-comparison.png
+
+# Grid comparison with custom colors
+npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --layout grid --custom-colors "bullish=#00ff88,bearish=#ff4444" --output grid-comparison.png
+
 # Hide elements for clean charts
 npx @neabyte/chart-to-image -s ADA/USDT -o clean.png --hide-title --hide-time-axis --hide-grid
 ```
@@ -78,7 +94,7 @@ npx @neabyte/chart-to-image -s ADA/USDT -o clean.png --hide-title --hide-time-ax
 ### 🔧 Programmatic API
 
 ```typescript
-import { quickChart, generateChartImage, fetchMarketData } from '@neabyte/chart-to-image'
+import { quickChart, generateChartImage, fetchMarketData, ComparisonService } from '@neabyte/chart-to-image'
 
 // Quick chart generation
 const result = await quickChart('BTC/USDT', 'chart.png', {
@@ -112,6 +128,32 @@ const config = {
 }
 
 const result = await generateChartImage(config)
+
+// Chart comparison
+const comparisonResult = await ComparisonService.sideBySide(
+  ['BTC/USDT', 'ETH/USDT'],
+  'comparison.png'
+)
+
+// Timeframe comparison
+const timeframeResult = await ComparisonService.timeframeComparison(
+  'BTC/USDT',
+  ['1h', '4h', '1d'],
+  'timeframe-comparison.png'
+)
+
+// Grid comparison with custom colors
+const gridResult = await ComparisonService.grid(
+  ['BTC/USDT', 'ETH/USDT'],
+  2,
+  'grid-comparison.png',
+  {
+    customBarColors: {
+      bullish: '#00ff88',
+      bearish: '#ff4444'
+    }
+  }
+)
 ```
 
 ## ⚡ Advanced Features
@@ -195,6 +237,12 @@ const result = await generateChartImage(config)
 
 # Horizontal Levels
 --levels <levels>           Horizontal levels (format: value:color:style:label,value:color:style:label)
+
+# Chart Comparison
+--compare <symbols>         Compare multiple symbols (format: symbol1,symbol2)
+--layout <type>             Layout type (side-by-side, grid)
+--columns <number>          Number of columns for grid layout (max 2)
+--timeframes <timeframes>   Compare timeframes (format: 1h,4h,1d)
 
 # Hide Elements
 --hide-title                Hide chart title

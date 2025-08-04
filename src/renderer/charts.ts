@@ -8,9 +8,7 @@
  */
 
 import type { CanvasRenderingContext2D } from 'canvas'
-
-import type { ChartDimensions, PriceRange } from './types'
-
+import type { ChartDimensions, PriceRange } from '@/renderer/types'
 import type { ChartOptions } from '@/types/types'
 
 /**

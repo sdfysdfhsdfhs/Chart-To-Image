@@ -248,8 +248,6 @@ export class ImageExporter {
   private convertPixelsToRects(data: Uint8ClampedArray, width: number, height: number): string[] {
     const rects: string[] = []
     const visited = new Set<string>()
-
-    // Group similar colored pixels into rectangles
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const index = (y * width + x) * 4
@@ -257,16 +255,10 @@ export class ImageExporter {
         const g = data[index + 1]
         const b = data[index + 2]
         const a = data[index + 3]
-
-        // Skip transparent pixels
         if (a === 0) continue
-
         const color = `rgb(${r},${g},${b})`
         const key = `${x},${y}`
-
         if (visited.has(key)) continue
-
-        // Find the largest rectangle with same color
         const rect = this.findLargestRect(data, width, height, x, y, r, g, b, a, visited)
         if (rect) {
           const { x: rectX, y: rectY, width: rectWidth, height: rectHeight } = rect
@@ -274,7 +266,6 @@ export class ImageExporter {
         }
       }
     }
-
     return rects
   }
 

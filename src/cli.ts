@@ -8,14 +8,15 @@
 import { ChartRenderer } from '@/core/renderer'
 import { ChartConfig } from '@/core/config'
 import { parseArgs, validateArgs, showHelp } from '@/utils/cli'
-import { fetchMarketData, generateMultipleCharts } from './index'
+import { fetchMarketData, generateMultipleCharts } from '@/index'
 import type { Exchange } from '@/types/types'
+import { ComparisonService } from '@/core/comparison'
 
 /**
  * Main CLI entry point
  * Handles command line arguments and executes appropriate actions
  */
-async function main() {
+async function main(): Promise<void> {
   try {
     const args = parseArgs()
     if (args.help) {
@@ -59,6 +60,10 @@ async function main() {
       console.log('Sample data:', data.slice(0, 3))
       return
     }
+    if (args.compare) {
+      await handleComparison(args)
+      return
+    }
     console.log(`🎨 Generating chart for ${args.symbol}...`)
     const configData: any = {
       symbol: args.symbol!,
@@ -84,7 +89,6 @@ async function main() {
     if (args.customColors) {
       const colorParts = args.customColors.split(',')
       configData.customBarColors = {}
-      
       colorParts.forEach(part => {
         const [type, color] = part.split('=')
         if (type && color) {
@@ -141,6 +145,66 @@ async function main() {
     }
   } catch (error) {
     console.error('❌ Error:', error instanceof Error ? error.message : error)
+    process.exit(1)
+  }
+}
+
+/**
+ * Handles comparison chart generation
+ *
+ * @param args - CLI arguments for comparison
+ */
+async function handleComparison(args: any): Promise<void> {
+  if (!args.compare) {
+    console.error('Error: --compare requires comma-separated symbols')
+    process.exit(1)
+  }
+  if (!args.output) {
+    console.error('Error: --output is required for comparison charts')
+    process.exit(1)
+  }
+  const symbols = args.compare.split(',').map((s: string) => s.trim())
+  if (symbols.length < 2) {
+    console.error('Error: Comparison requires at least 2 symbols')
+    process.exit(1)
+  }
+  console.log(`🔄 Generating comparison chart for: ${symbols.join(', ')}`)
+  const comparisonConfig: any = {
+    symbols,
+    outputPath: args.output,
+    timeframe: args.timeframe,
+    exchange: args.exchange,
+    theme: args.theme,
+    chartType: args.chartType
+  }
+  if (args.customColors) {
+    const colorParts = args.customColors.split(',')
+    const customBarColors: Record<string, string> = {}
+    colorParts.forEach((part: string) => {
+      const [type, color] = part.split('=')
+      if (type && color) {
+        customBarColors[type.trim()] = color.trim()
+      }
+    })
+    if (Object.keys(customBarColors).length > 0) {
+      comparisonConfig.customBarColors = customBarColors
+    }
+  }
+  if (args.timeframes) {
+    const timeframes = args.timeframes.split(',').map((tf: string) => tf.trim())
+    comparisonConfig.timeframes = timeframes
+  }
+  let result
+  if (args.layout === 'grid') {
+    const columns = args.columns || 2
+    result = await ComparisonService.grid(symbols, columns, args.output, comparisonConfig)
+  } else {
+    result = await ComparisonService.sideBySide(symbols, args.output, comparisonConfig)
+  }
+  if (result.success) {
+    console.log(`✅ Comparison chart saved to: ${result.outputPath}`)
+  } else {
+    console.error(`❌ Failed to generate comparison: ${result.error}`)
     process.exit(1)
   }
 }

@@ -18,36 +18,44 @@ import { ChartRenderer } from '@/core/renderer'
  */
 export interface CLIArgs {
   symbol?: string
+  symbols?: string[]
   timeframe?: string
   exchange?: string
   output?: string
   width?: number
   height?: number
-  theme?: string
+  theme?: 'light' | 'dark'
   chartType?: string
-  scaleX?: number
-  scaleY?: number
-  autoScale?: boolean
-  minScale?: number
-  maxScale?: number
-
-  limit?: number
-  help?: boolean
-  fetch?: boolean
-  batch?: unknown[]
+  backgroundColor?: string
+  textColor?: string
   customColors?: string
   levels?: string
+  hideTitle?: boolean
+  hideTimeAxis?: boolean
+  hideGrid?: boolean
+  autoScale?: boolean
+  scaleX?: number
+  scaleY?: number
+  minScale?: number
+  maxScale?: number
+  fetch?: boolean
+  limit?: number
+  // Comparison options
+  compare?: string
+  layout?: 'side-by-side' | 'grid'
+  columns?: number
+  rows?: number
+  gap?: number
+  timeframes?: string
+  // Legacy options
   title?: string
   watermark?: string
   watermarkPosition?: string
   watermarkColor?: string
   watermarkSize?: number
   watermarkOpacity?: number
-  hideTitle?: boolean
-  hideTimeAxis?: boolean
-  hideGrid?: boolean
-  backgroundColor?: string
-  textColor?: string
+  batch?: unknown[]
+  help?: boolean
 }
 
 /**
@@ -118,7 +126,7 @@ export function parseArgs(): CLIArgs {
         break
       case '--theme':
         if (nextArg && !nextArg.startsWith('-')) {
-          parsed.theme = nextArg
+          parsed.theme = nextArg as 'light' | 'dark'
           i++
         }
         break
@@ -264,6 +272,52 @@ export function parseArgs(): CLIArgs {
       case '--help':
         parsed.help = true
         break
+      // Comparison options
+      case '--compare':
+        if (nextArg && !nextArg.startsWith('-')) {
+          parsed.compare = nextArg
+          i++
+        }
+        break
+      case '--layout':
+        if (nextArg && !nextArg.startsWith('-')) {
+          parsed.layout = nextArg as 'side-by-side' | 'grid'
+          i++
+        }
+        break
+      case '--columns':
+        if (nextArg && !nextArg.startsWith('-')) {
+          const columns = parseInt(nextArg)
+          if (!isNaN(columns)) {
+            parsed.columns = columns
+            i++
+          }
+        }
+        break
+      case '--rows':
+        if (nextArg && !nextArg.startsWith('-')) {
+          const rows = parseInt(nextArg)
+          if (!isNaN(rows)) {
+            parsed.rows = rows
+            i++
+          }
+        }
+        break
+      case '--gap':
+        if (nextArg && !nextArg.startsWith('-')) {
+          const gap = parseInt(nextArg)
+          if (!isNaN(gap)) {
+            parsed.gap = gap
+            i++
+          }
+        }
+        break
+      case '--timeframes':
+        if (nextArg && !nextArg.startsWith('-')) {
+          parsed.timeframes = nextArg
+          i++
+        }
+        break
       default:
         if (arg.startsWith('-')) {
           console.warn(`Unknown option: ${arg}`)
@@ -285,21 +339,25 @@ export function parseArgs(): CLIArgs {
  * @returns True if all required arguments are present and valid
  */
 export function validateArgs(args: CLIArgs): boolean {
+  if (args.compare) {
+    if (!args.output) {
+      console.error('Error: Output path is required for comparison (--output or -o)')
+      return false
+    }
+    return true
+  }
   if (!args.symbol) {
     console.error('Error: Symbol is required (--symbol or -s)')
     return false
   }
-
   if (!args.timeframe) {
     console.error('Error: Timeframe is required (--timeframe or -t)')
     return false
   }
-
   if (!args.output) {
     console.error('Error: Output path is required (--output or -o)')
     return false
   }
-
   return true
 }
 
@@ -380,7 +438,6 @@ export function argsToConfig(args: CLIArgs): ChartConfig {
     limit: args.limit || 100,
     fetch: args.fetch || false
   }
-
   addScalingOptions(config, args)
   addCustomColors(config, args)
   addHorizontalLevels(config, args)
@@ -388,7 +445,7 @@ export function argsToConfig(args: CLIArgs): ChartConfig {
   addWatermark(config, args)
   addHideOptions(config, args)
   addColors(config, args)
-
+  addComparisonOptions(config, args)
   return new ChartConfig(config)
 }
 
@@ -421,17 +478,14 @@ function addScalingOptions(config: Record<string, unknown>, args: CLIArgs): void
 function addCustomColors(config: Record<string, unknown>, args: CLIArgs): void {
   if (args.customColors) {
     try {
-      // Parse simple key=value format: "bullish=#00ff88,bearish=#ff4444,wick=#ffffff,border=#333333"
       const colorParts = args.customColors.split(',')
       const customBarColors: Record<string, string> = {}
-
       colorParts.forEach(part => {
         const [type, color] = part.split('=')
         if (type && color) {
           customBarColors[type.trim()] = color.trim()
         }
       })
-
       if (Object.keys(customBarColors).length > 0) {
         config.customBarColors = customBarColors
       }
@@ -537,6 +591,34 @@ function addHideOptions(config: Record<string, unknown>, args: CLIArgs): void {
 function addColors(config: Record<string, unknown>, args: CLIArgs): void {
   if (args.backgroundColor) config.backgroundColor = args.backgroundColor
   if (args.textColor) config.textColor = args.textColor
+}
+
+/**
+ * Adds comparison options
+ *
+ * Processes comparison-related arguments and applies them to the configuration
+ * object. Handles comparison symbols, layout, and timeframes.
+ *
+ * @param config - Configuration object to modify
+ * @param args - CLI arguments containing comparison options
+ */
+function addComparisonOptions(config: Record<string, unknown>, args: CLIArgs): void {
+  if (args.compare) {
+    const symbols = args.compare.split(',').map(s => s.trim())
+    config.symbols = symbols
+  }
+  if (args.layout) {
+    config.layout = {
+      type: args.layout,
+      columns: args.columns,
+      rows: args.rows,
+      gap: args.gap
+    }
+  }
+  if (args.timeframes) {
+    const timeframes = args.timeframes.split(',').map(t => t.trim())
+    config.timeframes = timeframes
+  }
 }
 
 /**
