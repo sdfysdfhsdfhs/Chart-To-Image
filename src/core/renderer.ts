@@ -91,7 +91,8 @@ export class ChartRenderer {
       open: item.open,
       high: item.high,
       low: item.low,
-      close: item.close
+      close: item.close,
+      ...(item.volume !== undefined && { volume: item.volume })
     }))
     const levels =
       options.horizontalLevels?.map(level => ({
@@ -138,7 +139,8 @@ export class ChartRenderer {
       title: this.config.title || `${this.config.symbol} ${this.config.timeframe}`,
       showTitle: this.config.showTitle !== false,
       showTimeAxis: this.config.showTimeAxis !== false,
-      showGrid: this.config.showGrid !== false
+      showGrid: this.config.showGrid !== false,
+      showVWAP: this.config.showVWAP === true
     }
     if (this.config.watermark !== undefined) {
       options.watermark = this.config.watermark

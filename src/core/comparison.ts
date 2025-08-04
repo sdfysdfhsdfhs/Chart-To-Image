@@ -42,6 +42,8 @@ export interface ComparisonConfig {
   theme?: 'light' | 'dark'
   /** Type of chart to render */
   chartType?: string
+  /** Whether to display VWAP indicator */
+  showVWAP?: boolean
   /** Output file path for saving the comparison */
   outputPath?: string
   /** Custom colors for chart bars and elements */
@@ -86,6 +88,7 @@ export interface ComparisonResult {
  * side-by-side layouts, grid arrangements, and timeframe analysis.
  */
 export class ComparisonService {
+  private static readonly DEFAULT_LAYOUT_TYPE = 'side-by-side'
   private config: ComparisonConfig
   private dataProvider: DataProvider
 
@@ -119,7 +122,7 @@ export class ComparisonService {
    */
   public async generateComparison(): Promise<ComparisonResult> {
     try {
-      const { symbols, layout = { type: 'side-by-side' }, width = 1600, height = 800 } = this.config
+      const { symbols, layout = { type: ComparisonService.DEFAULT_LAYOUT_TYPE }, width = 1600, height = 800 } = this.config
       const comparisonRenderer = new ComparisonRenderer(width, height, layout)
       await this.addChartsToRenderer(comparisonRenderer, symbols)
       await comparisonRenderer.renderComparison()
@@ -285,7 +288,8 @@ export class ComparisonService {
       open: item.open,
       high: item.high,
       low: item.low,
-      close: item.close
+      close: item.close,
+      ...(item.volume !== undefined && { volume: item.volume })
     }))
     return {
       ohlc,
@@ -308,7 +312,8 @@ export class ComparisonService {
         title: `${config.symbol} ${config.timeframe}`,
         showTitle: true,
         showTimeAxis: true,
-        showGrid: true
+        showGrid: true,
+        showVWAP: this.config.showVWAP === true
       }
     }
   }
@@ -331,7 +336,7 @@ export class ComparisonService {
     const service = new ComparisonService({
       symbols,
       outputPath,
-      layout: { type: 'side-by-side', gap: 20 },
+      layout: { type: ComparisonService.DEFAULT_LAYOUT_TYPE, gap: 20 },
       ...config
     })
     return service.generateComparison()
@@ -404,7 +409,7 @@ export class ComparisonService {
       symbols: [symbol],
       timeframes,
       outputPath,
-      layout: { type: 'side-by-side', gap: 20 },
+      layout: { type: ComparisonService.DEFAULT_LAYOUT_TYPE, gap: 20 },
       ...config
     })
     return service.generateComparison()

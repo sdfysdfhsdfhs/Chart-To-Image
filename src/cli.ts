@@ -131,6 +131,9 @@ async function main(): Promise<void> {
     if (args.hideGrid) {
       configData.showGrid = false
     }
+    if (args.showVWAP) {
+      configData.showVWAP = true
+    }
     const config = new ChartConfig(configData)
     const renderer = new ChartRenderer(config)
     const result = await renderer.generateChart()
@@ -175,7 +178,8 @@ async function handleComparison(args: any): Promise<void> {
     timeframe: args.timeframe,
     exchange: args.exchange,
     theme: args.theme,
-    chartType: args.chartType
+    chartType: args.chartType,
+    showVWAP: args.showVWAP
   }
   if (args.customColors) {
     const colorParts = args.customColors.split(',')

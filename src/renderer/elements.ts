@@ -3,7 +3,7 @@
  *
  * Individual renderers for chart elements including axes, grid lines,
  * volume bars, horizontal levels, titles, and watermarks. Each renderer
- * handles specific visual components that enhance chart readability and
+ * handles specific visual components that support chart readability and
  * provide additional trading information.
  */
 
@@ -31,6 +31,8 @@ interface ChartOHLC {
  * Y-axis, and time labels on the X-axis. Provides clear reference points
  * for price levels and time intervals with appropriate formatting.
  */
+const DEFAULT_FONT = '12px Arial'
+
 export class AxesRenderer {
   private ctx: CanvasRenderingContext2D
   private dimensions: ChartDimensions
@@ -93,11 +95,11 @@ export class AxesRenderer {
    *
    * Renders formatted price values at regular intervals along the Y-axis
    * with corresponding tick marks. Uses appropriate decimal formatting
-   * based on price magnitude for optimal readability.
+   * based on price magnitude for clear readability.
    */
   private drawPriceLabels(): void {
     this.ctx.fillStyle = this.config.textColor || '#ffffff'
-    this.ctx.font = '12px Arial'
+    this.ctx.font = DEFAULT_FONT
     this.ctx.textAlign = 'right'
     const numLabels = 5
     for (let i = 0; i <= numLabels; i++) {
@@ -151,7 +153,7 @@ export class AxesRenderer {
 /**
  * Chart grid lines renderer
  *
- * Renders background grid lines to enhance chart readability and provide
+ * Renders background grid lines to support chart readability and provide
  * visual reference points for price levels and time intervals. Creates
  * a structured background that aids in price and time estimation.
  */
@@ -182,7 +184,7 @@ export class GridRenderer {
    *
    * Draws vertical and horizontal grid lines at regular intervals
    * across the chart area. Respects visibility settings and applies
-   * appropriate styling for optimal readability without visual clutter.
+   * appropriate styling for clear readability without visual clutter.
    */
   render(): void {
     if (this.config.showGrid === false) return
@@ -210,7 +212,7 @@ export class GridRenderer {
  *
  * Renders trading volume data as bars below the main chart area.
  * Provides visual representation of trading activity with color coding
- * based on price movement direction for comprehensive market analysis.
+ * based on price movement direction for market analysis.
  */
 export class VolumeRenderer {
   private ctx: CanvasRenderingContext2D
@@ -262,6 +264,115 @@ export class VolumeRenderer {
       this.ctx.fillStyle = color
       this.ctx.fillRect(x - barWidth / 2, y, barWidth, volumeBarHeight)
     })
+  }
+}
+
+/**
+ * VWAP data structure for volume-weighted average price
+ */
+interface VWAPData {
+  time: number
+  value: number
+}
+
+/**
+ * VWAP indicator renderer
+ *
+ * Renders Volume Weighted Average Price (VWAP) as an overlay line
+ * on the main chart. VWAP is a key institutional indicator that
+ * shows the average price weighted by volume for trading decisions.
+ */
+export class VWAPRenderer {
+  private ctx: CanvasRenderingContext2D
+  private dimensions: ChartDimensions
+  private priceRange: PriceRange
+  private config: ChartOptions
+
+  /**
+   * Creates a new VWAP renderer instance
+   *
+   * Initializes the renderer with canvas context, chart dimensions,
+   * price range for scaling, and configuration options for consistent
+   * VWAP line styling and positioning on the main chart.
+   *
+   * @param ctx - Canvas rendering context for drawing operations
+   * @param dimensions - Chart dimensions and margin configuration
+   * @param priceRange - Price range for coordinate scaling
+   * @param config - Chart styling and configuration options
+   */
+  constructor(
+    ctx: CanvasRenderingContext2D,
+    dimensions: ChartDimensions,
+    priceRange: PriceRange,
+    config: ChartOptions
+  ) {
+    this.ctx = ctx
+    this.dimensions = dimensions
+    this.priceRange = priceRange
+    this.config = config
+  }
+
+  /**
+   * Calculates VWAP values from OHLC data
+   *
+   * Computes Volume Weighted Average Price using the standard
+   * calculation method. VWAP is calculated as the sum of
+   * (price * volume) divided by total volume for each period.
+   *
+   * @param ohlc - Array of OHLC candle data with volume
+   * @returns Array of VWAP data points
+   */
+  private calculateVWAP(ohlc: ChartOHLC[]): VWAPData[] {
+    if (ohlc.length === 0) return []
+    const vwapData: VWAPData[] = []
+    let cumulativeVolumePrice = 0
+    let cumulativeVolume = 0
+    ohlc.forEach(candle => {
+      const volume = candle.volume || 0
+      const typicalPrice = (candle.high + candle.low + candle.close) / 3
+      cumulativeVolumePrice += typicalPrice * volume
+      cumulativeVolume += volume
+      const vwap = cumulativeVolume > 0 ? cumulativeVolumePrice / cumulativeVolume : typicalPrice
+      vwapData.push({
+        time: candle.time,
+        value: vwap
+      })
+    })
+    return vwapData
+  }
+
+  /**
+   * Renders VWAP indicator
+   *
+   * Draws VWAP line as an overlay on the main chart with
+   * distinctive styling to distinguish it from price action.
+   * Uses color coding and line style for professional appearance.
+   *
+   * @param ohlc - Array of OHLC candle data
+   */
+  render(ohlc: ChartOHLC[]): void {
+    const vwapData = this.calculateVWAP(ohlc)
+    if (vwapData.length === 0) return
+    const spacing = this.dimensions.chartWidth / ohlc.length
+    this.ctx.strokeStyle = this.config.customBarColors?.bullish || '#ff6b6b'
+    this.ctx.lineWidth = 2
+    this.ctx.setLineDash([5, 5])
+    this.ctx.beginPath()
+    vwapData.forEach((point, index) => {
+      const x = this.dimensions.margin.left + index * spacing + spacing / 2
+      const y = this.dimensions.margin.top + 
+        ((this.priceRange.maxPrice - point.value) / this.priceRange.priceRange) * this.dimensions.chartHeight
+      if (index === 0) {
+        this.ctx.moveTo(x, y)
+      } else {
+        this.ctx.lineTo(x, y)
+      }
+    })
+    this.ctx.stroke()
+    this.ctx.fillStyle = this.config.customBarColors?.bullish || '#ff6b6b'
+    this.ctx.font = DEFAULT_FONT
+    this.ctx.textAlign = 'left'
+    this.ctx.fillText('VWAP', this.dimensions.margin.left + 5, this.dimensions.margin.top + 20)
   }
 }
 
@@ -318,7 +429,7 @@ export class LevelsRenderer {
       this.ctx.setLineDash([])
       if (level.label) {
         this.ctx.fillStyle = level.color
-        this.ctx.font = '12px Arial'
+        this.ctx.font = DEFAULT_FONT
         this.ctx.textAlign = 'right'
         this.ctx.fillText(level.label, this.dimensions.margin.left - 10, y - 5)
       }

@@ -45,6 +45,7 @@ export class DataProvider {
    * @returns Configured exchange instance
    */
   private createExchange(): ExchangeInstance {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const exchangeClass = ccxt[this.config.name as keyof typeof ccxt] as any
     if (!exchangeClass) {
       throw new Error(`Unsupported exchange: ${this.config.name}`)

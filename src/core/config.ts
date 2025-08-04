@@ -36,6 +36,7 @@ export class ChartConfig implements IChartConfig {
   public showTitle?: boolean
   public showTimeAxis?: boolean
   public showGrid?: boolean
+  public showVWAP?: boolean
   public backgroundColor?: string
   public textColor?: string
 
@@ -70,6 +71,9 @@ export class ChartConfig implements IChartConfig {
     }
     if (config.showGrid !== undefined) {
       this.showGrid = config.showGrid
+    }
+    if (config.showVWAP !== undefined) {
+      this.showVWAP = config.showVWAP
     }
     if (config.backgroundColor !== undefined) {
       this.backgroundColor = config.backgroundColor

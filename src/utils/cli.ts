@@ -33,6 +33,7 @@ export interface CLIArgs {
   hideTitle?: boolean
   hideTimeAxis?: boolean
   hideGrid?: boolean
+  showVWAP?: boolean
   autoScale?: boolean
   scaleX?: number
   scaleY?: number
@@ -249,6 +250,9 @@ export function parseArgs(): CLIArgs {
       case '--hide-grid':
         parsed.hideGrid = true
         break
+      case '--vwap':
+        parsed.showVWAP = true
+        break
       case '--background-color':
       case '--bg-color':
         if (nextArg && !nextArg.startsWith('-')) {
@@ -375,38 +379,39 @@ Chart To Image - Generate trading chart images
 Usage: chart-to-image [options]
 
 Required Options:
-  --symbol, -s <symbol>        Trading symbol (e.g., BTC/USDT)
-  --timeframe, -t <timeframe>  Timeframe (1m, 5m, 15m, 1h, 4h, 1d)
-  --output, -o <path>          Output file path
+  --symbol, -s <symbol>           Trading symbol (e.g., BTC/USDT)
+  --timeframe, -t <timeframe>     Timeframe (1m, 5m, 15m, 1h, 4h, 1d)
+  --output, -o <path>             Output file path
 
 Optional Options:
-  --exchange, -e <exchange>    Exchange (default: binance)
-  --width, -w <width>          Chart width (default: 1200)
-  --height, -h <height>        Chart height (default: 800)
-  --theme <theme>              Theme: light or dark (default: dark)
-  --chart-type, --type <type>  Chart type: candlestick, line, area, heikin-ashi, renko, line-break
-  --scale-x <scale>            X-axis scale factor
-  --scale-y <scale>            Y-axis scale factor
-  --auto-scale                 Enable auto-scaling
-  --min-scale <scale>          Minimum scale
-  --max-scale <scale>          Maximum scale
-  --limit, -l <limit>          Number of candles (default: 100)
-  --custom-colors <colors>     Custom colors (format: type=color,type=color)
-  --levels <levels>            Horizontal levels (format: value:color:style:label,value:color:style:label)
-  --title <title>              Chart title
-  --watermark <text>           Watermark text
-  --watermark-position <pos>   Watermark position: top-left, top-right, bottom-left, bottom-right, center
-  --watermark-color <color>    Watermark color
-  --watermark-size <size>      Watermark font size
-  --watermark-opacity <op>     Watermark opacity (0-1)
-  --hide-title                 Hide chart title
-  --hide-time-axis             Hide time axis
-  --hide-grid                  Hide grid
-  --background-color <color>   Background color
-  --text-color <color>         Text color
-  --fetch                      Fetch fresh data
-  --batch                      Batch mode
-  --help                       Show this help
+  --exchange, -e <exchange>       Exchange (default: binance)
+  --width, -w <width>             Chart width (default: 1200)
+  --height, -h <height>           Chart height (default: 800)
+  --theme <theme>                 Theme: light or dark (default: dark)
+  --chart-type, --type <type>     Chart type: candlestick, line, area, heikin-ashi, renko, line-break
+  --scale-x <scale>               X-axis scale factor
+  --scale-y <scale>               Y-axis scale factor
+  --auto-scale                    Enable auto-scaling
+  --min-scale <scale>             Minimum scale
+  --max-scale <scale>             Maximum scale
+  --limit, -l <limit>             Number of candles (default: 100)
+  --custom-colors <colors>        Custom colors (format: type=color,type=color)
+  --levels <levels>               Horizontal levels (format: value:color:style:label,value:color:style:label)
+  --title <title>                 Chart title
+  --watermark <text>              Watermark text
+  --watermark-position <pos>      Watermark position: top-left, top-right, bottom-left, bottom-right, center
+  --watermark-color <color>       Watermark color
+  --watermark-size <size>         Watermark font size
+  --watermark-opacity <op>        Watermark opacity (0-1)
+  --hide-title                    Hide chart title
+  --hide-time-axis                Hide time axis
+  --hide-grid                     Hide grid
+  --vwap                          Show VWAP indicator
+  --background-color <color>      Background color
+  --text-color <color>            Text color
+  --fetch                         Fetch fresh data
+  --batch                         Batch mode
+  --help                          Show this help
 
 Examples:
   chart-to-image --symbol BTC/USDT --timeframe 1h --output chart.png
@@ -577,6 +582,7 @@ function addHideOptions(config: Record<string, unknown>, args: CLIArgs): void {
   if (args.hideTitle) config.showTitle = false
   if (args.hideTimeAxis) config.showTimeAxis = false
   if (args.hideGrid) config.showGrid = false
+  if (args.showVWAP) config.showVWAP = true
 }
 
 /**

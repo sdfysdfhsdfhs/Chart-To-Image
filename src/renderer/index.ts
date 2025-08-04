@@ -8,17 +8,18 @@
  */
 
 import { createCanvas, Canvas, CanvasRenderingContext2D } from 'canvas'
+
 import { CandlestickRenderer, LineRenderer, AreaRenderer, HeikinAshiRenderer, RenkoRenderer, LineBreakRenderer } from '@/renderer/charts'
 import {
   AxesRenderer,
   GridRenderer,
-  VolumeRenderer,
+  VWAPRenderer,
   LevelsRenderer,
   TitleRenderer,
   WatermarkRenderer
 } from '@/renderer/elements'
-import { calculatePriceRange, hasVolumeData } from '@/renderer/utils'
 import type { NodeChartData, ChartDimensions, PriceRange } from '@/renderer/types'
+import { calculatePriceRange, hasVolumeData } from '@/renderer/utils'
 import type { ChartOptions } from '@/types/types'
 
 /**
@@ -107,9 +108,9 @@ export class NodeChartRenderer {
     }
     const priceRange = calculatePriceRange(ohlc, config)
     this.drawChartType(ohlc, dimensions, priceRange, config)
-    if (hasVolumeData(ohlc)) {
-      const volumeRenderer = new VolumeRenderer(this.ctx, dimensions, config)
-      volumeRenderer.render(ohlc)
+    if (config.showVWAP && hasVolumeData(ohlc)) {
+      const vwapRenderer = new VWAPRenderer(this.ctx, dimensions, priceRange, config)
+      vwapRenderer.render(ohlc)
     }
     if (this.chartData.levels) {
       const levelsRenderer = new LevelsRenderer(this.ctx, dimensions, priceRange)

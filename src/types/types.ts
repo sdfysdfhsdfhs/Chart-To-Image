@@ -64,6 +64,8 @@ export interface ChartConfig {
   showTimeAxis?: boolean
   /** Whether to display the grid */
   showGrid?: boolean
+  /** Whether to display VWAP indicator */
+  showVWAP?: boolean
   /** Background color of the chart */
   backgroundColor?: string
   /** Text color for chart labels */
@@ -162,6 +164,8 @@ export interface ChartOptions {
   showTimeAxis?: boolean
   /** Whether to display the grid */
   showGrid?: boolean
+  /** Whether to display VWAP indicator */
+  showVWAP?: boolean
   /** Chart scaling configuration */
   scale?: {
     /** X-axis scale factor */
