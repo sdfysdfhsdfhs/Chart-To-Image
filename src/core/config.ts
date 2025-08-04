@@ -22,7 +22,7 @@ export class ChartConfig implements IChartConfig {
   public width: number
   public height: number
   public theme: 'light' | 'dark'
-  public chartType: 'candlestick' | 'line' | 'area' | 'heikin-ashi' | 'renko'
+  public chartType: 'candlestick' | 'line' | 'area' | 'heikin-ashi' | 'renko' | 'line-break'
   public indicators: string[]
   public watermark?: string | WatermarkConfig
   public customBarColors?: {
@@ -138,7 +138,7 @@ export class ChartConfig implements IChartConfig {
    * @returns True if chart type is supported, false otherwise
    */
   private isValidChartType(chartType: string): boolean {
-    const validChartTypes = ['candlestick', 'line', 'area', 'heikin-ashi', 'renko']
+    const validChartTypes = ['candlestick', 'line', 'area', 'heikin-ashi', 'renko', 'line-break']
     return validChartTypes.includes(chartType)
   }
 

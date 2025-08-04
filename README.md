@@ -1,5 +1,11 @@
 # 📊 Chart To Image
 
+[![NPM Version](https://img.shields.io/npm/v/@neabyte/chart-to-image.svg)](https://www.npmjs.com/package/@neabyte/chart-to-image)
+[![NPM Downloads](https://img.shields.io/npm/dm/@neabyte/chart-to-image.svg)](https://www.npmjs.com/package/@neabyte/chart-to-image)
+[![License](https://img.shields.io/npm/l/@neabyte/chart-to-image.svg)](https://github.com/NeaByteLab/Chart-To-Image/blob/main/LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue.svg)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18.0.0-green.svg)](https://nodejs.org/)
+
 Convert trading charts to images using [Node.js Canvas](https://github.com/Automattic/node-canvas), [lightweight-charts](https://github.com/tradingview/lightweight-charts), and [CCXT](https://github.com/ccxt/ccxt). A powerful Node.js library for generating high-quality trading chart images from market data.
 
 ![Chart-To-Image Demo](assets/images/showcase.png)
@@ -32,7 +38,7 @@ Convert trading charts to images using [Node.js Canvas](https://github.com/Autom
 - 📦 **Easy Integration**: Simple npm install and import
 - 🎨 **Custom Bar Colors**: Customize bullish/bearish candle colors
 - 📈 **Horizontal Levels**: Add support/resistance levels with labels
-- 🌈 **Advanced Chart Types**: Candlestick, Line, Area, Heikin-Ashi, Renko
+- 🌈 **Advanced Chart Types**: Candlestick, Line, Area, Heikin-Ashi, Renko, Line Break
 - 🎯 **Custom Themes**: Light/Dark themes with custom colors
 - 👁️ **Hide Elements**: Hide title, time axis, and grid
 - 🎨 **Color Customization**: Hex, RGB, named colors, and gradients
@@ -75,6 +81,7 @@ npx @neabyte/chart-to-image -s BTC/USDT -o chart.png --theme dark --background-c
 # Advanced chart types
 npx @neabyte/chart-to-image -s ETH/USDT -o heikin-ashi.png --chart-type heikin-ashi
 npx @neabyte/chart-to-image -s BTC/USDT -o renko.png --chart-type renko
+npx @neabyte/chart-to-image -s BTC/USDT -o line-break.png --chart-type line-break
 
 # Chart comparison (side-by-side)
 npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --output comparison.png
@@ -165,6 +172,7 @@ const gridResult = await ComparisonService.grid(
 - **Area**: Filled area chart
 - **Heikin-Ashi**: Trend-smoothed candles
 - **Renko**: Price-based block chart
+- **Line Break**: Break high/low trend patterns
 
 ### 🎨 Custom Colors
 
@@ -225,7 +233,7 @@ const gridResult = await ComparisonService.grid(
 --height, -h <px>           Chart height in pixels
 
 # Chart Types
---chart-type <type>         Chart type (candlestick, line, area, heikin-ashi, renko)
+--chart-type <type>         Chart type (candlestick, line, area, heikin-ashi, renko, line-break)
 
 # Themes & Colors
 --theme <theme>             Theme (light, dark)

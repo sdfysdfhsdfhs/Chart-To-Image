@@ -8,7 +8,7 @@
  */
 
 import { createCanvas, Canvas, CanvasRenderingContext2D } from 'canvas'
-import { CandlestickRenderer, LineRenderer, AreaRenderer, HeikinAshiRenderer, RenkoRenderer } from '@/renderer/charts'
+import { CandlestickRenderer, LineRenderer, AreaRenderer, HeikinAshiRenderer, RenkoRenderer, LineBreakRenderer } from '@/renderer/charts'
 import {
   AxesRenderer,
   GridRenderer,
@@ -165,6 +165,11 @@ export class NodeChartRenderer {
       case 'renko': {
         const renkoRenderer = new RenkoRenderer(this.ctx, dimensions, priceRange, config)
         renkoRenderer.render(ohlc)
+        break
+      }
+      case 'line-break': {
+        const lineBreakRenderer = new LineBreakRenderer(this.ctx, dimensions, priceRange, config)
+        lineBreakRenderer.render(ohlc)
         break
       }
     }

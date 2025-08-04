@@ -384,7 +384,7 @@ Optional Options:
   --width, -w <width>          Chart width (default: 1200)
   --height, -h <height>        Chart height (default: 800)
   --theme <theme>              Theme: light or dark (default: dark)
-  --chart-type, --type <type>  Chart type: candlestick, line, area, heikin-ashi, renko
+  --chart-type, --type <type>  Chart type: candlestick, line, area, heikin-ashi, renko, line-break
   --scale-x <scale>            X-axis scale factor
   --scale-y <scale>            Y-axis scale factor
   --auto-scale                 Enable auto-scaling

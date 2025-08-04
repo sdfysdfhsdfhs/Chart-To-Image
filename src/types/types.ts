@@ -38,7 +38,7 @@ export interface ChartConfig {
   /** Visual theme of the chart */
   theme: 'light' | 'dark'
   /** Type of chart to render */
-  chartType: 'candlestick' | 'line' | 'area' | 'heikin-ashi' | 'renko'
+  chartType: 'candlestick' | 'line' | 'area' | 'heikin-ashi' | 'renko' | 'line-break'
   /** List of technical indicators to display */
   indicators: string[]
   /** Watermark configuration or text */
@@ -134,7 +134,7 @@ export interface ChartOptions {
   /** Color of chart borders */
   borderColor: string
   /** Type of chart to render */
-  chartType?: 'candlestick' | 'line' | 'area' | 'heikin-ashi' | 'renko'
+  chartType?: 'candlestick' | 'line' | 'area' | 'heikin-ashi' | 'renko' | 'line-break'
   /** Watermark configuration or text */
   watermark?: string | WatermarkConfig
   /** Color of the watermark */

@@ -31,6 +31,15 @@ interface RenkoBlock extends ChartOHLC {
 }
 
 /**
+ * Line Break data structure for trend analysis
+ */
+interface LineBreakPoint {
+  time: number
+  price: number
+  direction: 'up' | 'down'
+}
+
+/**
  * Abstract base class for chart type renderers
  *
  * Provides common functionality and interface for all chart type renderers.
@@ -417,6 +426,111 @@ export class RenkoRenderer extends ChartTypeRenderer {
         this.ctx.lineWidth = 2
         this.ctx.strokeRect(x - blockWidth / 2, blockY, blockWidth, blockHeight)
       }
+    })
+  }
+}
+
+/**
+ * Line Break chart renderer
+ *
+ * Renders price data as Line Break charts that only draw new lines when
+ * price breaks previous highs or lows. Creates clean trend patterns by
+ * filtering out minor price movements and focusing on significant breakouts.
+ */
+export class LineBreakRenderer extends ChartTypeRenderer {
+  /**
+   * Calculates Line Break points from OHLC data
+   *
+   * Converts standard OHLC data into Line Break points that only
+   * create new lines when price breaks previous highs or lows.
+   * Filters out minor movements and creates clean trend patterns.
+   *
+   * @param ohlc - Array of OHLC data for Line Break conversion
+   * @returns Array of Line Break points with directional information
+   */
+  private calculateLineBreak(ohlc: ChartOHLC[]): LineBreakPoint[] {
+    if (ohlc.length === 0) return []
+    const lineBreakPoints: LineBreakPoint[] = []
+    let currentHigh = ohlc[0].high
+    let currentLow = ohlc[0].low
+    lineBreakPoints.push({
+      time: ohlc[0].time,
+      price: ohlc[0].close,
+      direction: 'up'
+    })
+    for (let i = 1; i < ohlc.length; i++) {
+      const candle = ohlc[i]
+      const lastPoint = lineBreakPoints[lineBreakPoints.length - 1]
+      if (candle.high > currentHigh) {
+        lineBreakPoints.push({
+          time: candle.time,
+          price: candle.high,
+          direction: 'up'
+        })
+        currentHigh = candle.high
+      }
+      else if (candle.low < currentLow) {
+        lineBreakPoints.push({
+          time: candle.time,
+          price: candle.low,
+          direction: 'down'
+        })
+        currentLow = candle.low
+      }
+      else {
+        lastPoint.price = candle.close
+        lastPoint.time = candle.time
+      }
+    }
+    return lineBreakPoints
+  }
+
+  /**
+   * Renders Line Break chart data
+   *
+   * Draws connected lines between Line Break points, creating clean
+   * trend patterns that highlight significant price movements. Uses
+   * different line styles for upward and downward movements.
+   *
+   * @param candles - Array of OHLC candle data for Line Break rendering
+   * @returns void
+   */
+  render(candles: ChartOHLC[]): void {
+    const lineBreakData = this.calculateLineBreak(candles)
+    if (lineBreakData.length < 2) return
+    const prices = lineBreakData.map(point => point.price)
+    const minPrice = Math.min(...prices)
+    const maxPrice = Math.max(...prices)
+    const priceRange = maxPrice - minPrice
+    this.ctx.lineWidth = 2
+    this.ctx.lineCap = 'round'
+    this.ctx.lineJoin = 'round'
+    for (let i = 1; i < lineBreakData.length; i++) {
+      const prevPoint = lineBreakData[i - 1]
+      const currentPoint = lineBreakData[i]
+      const x1 = this.dimensions.margin.left + (prevPoint.time - candles[0].time) / (candles[candles.length - 1].time - candles[0].time) * this.dimensions.chartWidth
+      const y1 = this.dimensions.margin.top + ((maxPrice - prevPoint.price) / priceRange) * this.dimensions.chartHeight
+      const x2 = this.dimensions.margin.left + (currentPoint.time - candles[0].time) / (candles[candles.length - 1].time - candles[0].time) * this.dimensions.chartWidth
+      const y2 = this.dimensions.margin.top + ((maxPrice - currentPoint.price) / priceRange) * this.dimensions.chartHeight
+      const color = currentPoint.direction === 'up'
+        ? this.config.customBarColors?.bullish || '#26a69a'
+        : this.config.customBarColors?.bearish || '#ef5350'
+      this.ctx.strokeStyle = color
+      this.ctx.beginPath()
+      this.ctx.moveTo(x1, y1)
+      this.ctx.lineTo(x2, y2)
+      this.ctx.stroke()
+    }
+    lineBreakData.forEach((point) => {
+      const x = this.dimensions.margin.left + (point.time - candles[0].time) / (candles[candles.length - 1].time - candles[0].time) * this.dimensions.chartWidth
+      const y = this.dimensions.margin.top + ((maxPrice - point.price) / priceRange) * this.dimensions.chartHeight
+      const color = point.direction === 'up'
+        ? this.config.customBarColors?.bullish || '#26a69a'
+        : this.config.customBarColors?.bearish || '#ef5350'
+      this.ctx.fillStyle = color
+      this.ctx.beginPath()
+      this.ctx.arc(x, y, 3, 0, 2 * Math.PI)
+      this.ctx.fill()
     })
   }
 }
