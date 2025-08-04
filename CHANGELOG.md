@@ -5,6 +5,96 @@ All notable changes to the Chart-To-Image library will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.4] - 2025-08-04
+
+### 🚀 Added
+- **Bollinger Bands Indicator**: Advanced volatility and trend analysis with custom colors and background fill
+- **Complete Technical Suite**: VWAP, EMA, SMA, and Bollinger Bands working together
+- **Advanced Color Customization**: Individual colors for upper, middle, and lower bands
+- **Background Fill**: Configurable background fill between bands with opacity control
+- **Multi-Chart Support**: Bollinger Bands on all chart types (candlestick, line, area, heikin-ashi, renko)
+- **Comparison Integration**: Full Bollinger Bands support in comparison charts
+- **CLI Integration**: `--bb` flag with comprehensive color options
+- **API Support**: Programmatic access to Bollinger Bands with custom configurations
+
+### 🎯 Features
+- **Bollinger Bands Calculation**: Standard deviation-based volatility analysis
+- **Custom Periods**: Configurable periods (default: 20) and standard deviations (default: 2)
+- **Three-Band System**: Upper (resistance), Middle (SMA), Lower (support) bands
+- **Advanced Styling**: Dashed lines for upper/lower bands, solid line for middle band
+- **Background Fill**: Optional fill between bands with configurable opacity (0.0-1.0)
+- **Color Customization**: Individual colors for each band and background fill
+- **Professional Labels**: "BB(period)" labels with consistent styling
+- **Complete Integration**: Works seamlessly with VWAP, EMA, and SMA indicators
+
+### 🔧 Technical
+- **BollingerBandsRenderer**: Dedicated renderer with split background/lines rendering
+- **Split Rendering**: Background fill rendered before candlesticks, lines after
+- **Type Safety**: Full TypeScript support for Bollinger Bands configurations
+- **Performance**: Optimized calculations and rendering with proper coordinate mapping
+- **Error Handling**: Robust validation for Bollinger Bands parameters
+- **Comparison Support**: Full integration with ComparisonService and ComparisonConfig
+- **CLI Integration**: Complete argument parsing for all Bollinger Bands options
+
+### 📚 Documentation
+- **README**: Updated with Bollinger Bands feature descriptions and examples
+- **USAGE.md**: Comprehensive Bollinger Bands usage guide with all chart types
+- **CLI Examples**: Command-line usage for basic and advanced Bollinger Bands
+- **API Examples**: Programmatic Bollinger Bands integration
+- **Comparison Examples**: Bollinger Bands in comparison charts
+- **Color Examples**: Custom color combinations for different themes
+
+### 🎨 Visual Enhancements
+- **Professional Rendering**: Background fill appears behind candlesticks for proper layering
+- **Custom Colors**: Individual control over upper, middle, lower band colors
+- **Background Fill**: Configurable fill between bands with opacity control
+- **Consistent Styling**: Dashed lines for resistance/support, solid for trend
+- **Complete Suite**: All four indicators (VWAP, EMA, SMA, BB) working harmoniously
+- **Multi-Chart Support**: Bollinger Bands on candlestick, line, area, heikin-ashi, renko charts
+
+### 🎨 CLI Options
+- `--bb`: Enable Bollinger Bands indicator
+- `--bb-period <number>`: Custom period (default: 20)
+- `--bb-standard-deviations <number>`: Standard deviations (default: 2)
+- `--bb-upper-color <color>`: Upper band color
+- `--bb-middle-color <color>`: Middle band color
+- `--bb-lower-color <color>`: Lower band color
+- `--bb-background-color <color>`: Background fill color
+- `--bb-background-opacity <number>`: Background opacity (0.0-1.0)
+
+### 🔄 Comparison Support
+- **Side-by-Side**: Bollinger Bands in symbol comparison charts
+- **Grid Layout**: Bollinger Bands in grid comparison layouts
+- **Timeframe Comparison**: Bollinger Bands across different timeframes
+- **Custom Colors**: Individual color customization in comparison charts
+- **Background Fill**: Configurable background fill in comparison mode
+
+### 📊 API Integration
+```typescript
+// Basic Bollinger Bands
+const config = {
+  showBollingerBands: true,
+  bbPeriod: 20,
+  bbStandardDeviations: 2
+}
+
+// Advanced with custom colors
+const config = {
+  showBollingerBands: true,
+  bbPeriod: 20,
+  bbStandardDeviations: 2,
+  bbColors: {
+    upper: '#ff6b9d',
+    middle: '#4ecdc4',
+    lower: '#ff6b9d',
+    background: '#ff6b9d',
+    backgroundOpacity: 0.2
+  }
+}
+```
+
+---
+
 ## [1.1.3] - 2025-08-04
 
 ### 🚀 Added

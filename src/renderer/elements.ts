@@ -608,6 +608,221 @@ export class SMARenderer {
   }
 }
 
+interface BollingerBandsData {
+  time: number
+  upper: number
+  middle: number
+  lower: number
+}
+
+/**
+ * Bollinger Bands indicator renderer
+ *
+ * Renders Bollinger Bands as overlay lines on charts with configurable periods.
+ * Bollinger Bands consist of three lines: upper band, middle band (SMA),
+ * and lower band. The bands expand and contract based on price volatility,
+ * providing support/resistance levels and volatility analysis.
+ */
+export class BollingerBandsRenderer {
+  private ctx: CanvasRenderingContext2D
+  private dimensions: ChartDimensions
+  private priceRange: PriceRange
+  private config: ChartOptions
+  private period: number
+  private standardDeviations: number
+
+  /**
+   * Creates a new Bollinger Bands renderer instance
+   *
+   * Initializes the renderer with canvas context, chart dimensions,
+   * price range for scaling, configuration options, and calculation
+   * parameters for Bollinger Bands analysis.
+   *
+   * @param ctx - Canvas rendering context for drawing operations
+   * @param dimensions - Chart dimensions and margin configuration
+   * @param priceRange - Price range for coordinate scaling
+   * @param config - Chart styling and configuration options
+   * @param period - Bollinger Bands calculation period (default: 20)
+   * @param standardDeviations - Number of standard deviations for bands (default: 2)
+   */
+  constructor(
+    ctx: CanvasRenderingContext2D,
+    dimensions: ChartDimensions,
+    priceRange: PriceRange,
+    config: ChartOptions,
+    period: number,
+    standardDeviations: number = 2
+  ) {
+    this.ctx = ctx
+    this.dimensions = dimensions
+    this.priceRange = priceRange
+    this.config = config
+    this.period = period
+    this.standardDeviations = standardDeviations
+  }
+
+  /**
+   * Calculates Bollinger Bands values from OHLC data
+   *
+   * Computes Bollinger Bands using the standard calculation method.
+   * Middle band is the SMA, upper and lower bands are SMA ± (standard
+   * deviation × multiplier). Provides volatility-based support/resistance.
+   *
+   * @param ohlc - Array of OHLC candle data
+   * @returns Array of Bollinger Bands data points
+   */
+  private calculateBollingerBands(ohlc: ChartOHLC[]): BollingerBandsData[] {
+    if (ohlc.length < this.period) return []
+    const bandsData: BollingerBandsData[] = []
+    for (let i = this.period - 1; i < ohlc.length; i++) {
+      const prices = []
+      for (let j = i - this.period + 1; j <= i; j++) {
+        prices.push(ohlc[j].close)
+      }
+      const sma = prices.reduce((sum, price) => sum + price, 0) / this.period
+      const variance = prices.reduce((sum, price) => sum + Math.pow(price - sma, 2), 0) / this.period
+      const standardDeviation = Math.sqrt(variance)
+      const upper = sma + this.standardDeviations * standardDeviation
+      const lower = sma - this.standardDeviations * standardDeviation
+      bandsData.push({
+        time: ohlc[i].time,
+        upper,
+        middle: sma,
+        lower
+      })
+    }
+    return bandsData
+  }
+
+  /**
+   * Renders Bollinger Bands background fill only
+   *
+   * Draws the background fill between the upper and lower bands.
+   * This should be called before candlesticks are rendered.
+   *
+   * @param ohlc - Array of OHLC candle data for Bollinger Bands calculation
+   */
+  renderBackground(ohlc: ChartOHLC[]): void {
+    const bandsData = this.calculateBollingerBands(ohlc)
+    if (bandsData.length === 0) return
+    const spacing = this.dimensions.chartWidth / ohlc.length
+    if (this.config.bbColors?.background || true) {
+      this.ctx.fillStyle = this.config.bbColors?.background || '#42A5F5'
+      this.ctx.globalAlpha = this.config.bbColors?.backgroundOpacity || 0.1
+      this.ctx.beginPath()
+      bandsData.forEach(point => {
+        const originalIndex = ohlc.findIndex(candle => candle.time === point.time)
+        if (originalIndex !== -1) {
+          const x = this.dimensions.margin.left + originalIndex * spacing + spacing / 2
+          const upperY =
+            this.dimensions.margin.top +
+            ((this.priceRange.maxPrice - point.upper) / this.priceRange.priceRange) * this.dimensions.chartHeight
+          if (originalIndex === 0) {
+            this.ctx.moveTo(x, upperY)
+          } else {
+            this.ctx.lineTo(x, upperY)
+          }
+        }
+      })
+      for (let i = bandsData.length - 1; i >= 0; i--) {
+        const point = bandsData[i]
+        const originalIndex = ohlc.findIndex(candle => candle.time === point.time)
+        if (originalIndex !== -1) {
+          const x = this.dimensions.margin.left + originalIndex * spacing + spacing / 2
+          const lowerY =
+            this.dimensions.margin.top +
+            ((this.priceRange.maxPrice - point.lower) / this.priceRange.priceRange) * this.dimensions.chartHeight
+          this.ctx.lineTo(x, lowerY)
+        }
+      }
+      this.ctx.closePath()
+      this.ctx.fill()
+      this.ctx.globalAlpha = 1.0
+    }
+  }
+
+  /**
+   * Renders Bollinger Bands lines only
+   *
+   * Draws the three Bollinger Bands lines (upper, middle, lower).
+   * This should be called after candlesticks are rendered.
+   *
+   * @param ohlc - Array of OHLC candle data for Bollinger Bands calculation
+   */
+  renderLines(ohlc: ChartOHLC[]): void {
+    const bandsData = this.calculateBollingerBands(ohlc)
+    if (bandsData.length === 0) return
+    const spacing = this.dimensions.chartWidth / ohlc.length
+    const bbFallbackColors = {
+      upper: '#42A5F5',
+      middle: '#1E88E5',
+      lower: '#42A5F5',
+      background: '#42A5F5'
+    }
+    this.ctx.strokeStyle = this.config.bbColors?.upper || bbFallbackColors.upper
+    this.ctx.lineWidth = 1
+    this.ctx.setLineDash([5, 5])
+    this.ctx.beginPath()
+    bandsData.forEach(point => {
+      const originalIndex = ohlc.findIndex(candle => candle.time === point.time)
+      if (originalIndex !== -1) {
+        const x = this.dimensions.margin.left + originalIndex * spacing + spacing / 2
+        const y =
+          this.dimensions.margin.top +
+          ((this.priceRange.maxPrice - point.upper) / this.priceRange.priceRange) * this.dimensions.chartHeight
+        if (originalIndex === 0) {
+          this.ctx.moveTo(x, y)
+        } else {
+          this.ctx.lineTo(x, y)
+        }
+      }
+    })
+    this.ctx.stroke()
+    this.ctx.strokeStyle = this.config.bbColors?.middle || bbFallbackColors.middle
+    this.ctx.lineWidth = 2
+    this.ctx.setLineDash([])
+    this.ctx.beginPath()
+    bandsData.forEach(point => {
+      const originalIndex = ohlc.findIndex(candle => candle.time === point.time)
+      if (originalIndex !== -1) {
+        const x = this.dimensions.margin.left + originalIndex * spacing + spacing / 2
+        const y =
+          this.dimensions.margin.top +
+          ((this.priceRange.maxPrice - point.middle) / this.priceRange.priceRange) * this.dimensions.chartHeight
+        if (originalIndex === 0) {
+          this.ctx.moveTo(x, y)
+        } else {
+          this.ctx.lineTo(x, y)
+        }
+      }
+    })
+    this.ctx.stroke()
+    this.ctx.strokeStyle = this.config.bbColors?.lower || bbFallbackColors.lower
+    this.ctx.lineWidth = 1
+    this.ctx.setLineDash([5, 5])
+    this.ctx.beginPath()
+    bandsData.forEach(point => {
+      const originalIndex = ohlc.findIndex(candle => candle.time === point.time)
+      if (originalIndex !== -1) {
+        const x = this.dimensions.margin.left + originalIndex * spacing + spacing / 2
+        const y =
+          this.dimensions.margin.top +
+          ((this.priceRange.maxPrice - point.lower) / this.priceRange.priceRange) * this.dimensions.chartHeight
+        if (originalIndex === 0) {
+          this.ctx.moveTo(x, y)
+        } else {
+          this.ctx.lineTo(x, y)
+        }
+      }
+    })
+    this.ctx.stroke()
+    this.ctx.fillStyle = this.config.bbColors?.upper || bbFallbackColors.upper
+    this.ctx.font = DEFAULT_FONT
+    this.ctx.textAlign = 'left'
+    this.ctx.fillText(`BB(${this.period})`, this.dimensions.margin.left + 5, this.dimensions.margin.top + 60)
+  }
+}
+
 /**
  * Horizontal price levels renderer
  *

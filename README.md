@@ -47,6 +47,7 @@ Convert trading charts to images using [Node.js Canvas](https://github.com/Autom
 - 🔄 **Chart Comparison**: Side-by-side and grid layouts for multiple symbols
 - ⏰ **Timeframe Comparison**: Same symbol across different timeframes
 - 🎨 **Comparison Customization**: Custom colors and themes for comparisons
+- 📊 **Technical Indicators**: VWAP, EMA, SMA, and Bollinger Bands with custom colors
 
 ## 🛠️ Technologies Used
 
@@ -89,6 +90,14 @@ npx @neabyte/chart-to-image -s ETH/USDT -o ema-chart.png --ema
 npx @neabyte/chart-to-image -s BTC/USDT -o sma-chart.png --sma
 npx @neabyte/chart-to-image -s BTC/USDT -o indicators.png --vwap --ema --sma
 
+# Bollinger Bands with custom colors
+npx @neabyte/chart-to-image -s BTC/USDT -o bb-chart.png --bb
+npx @neabyte/chart-to-image -s ETH/USDT -o bb-custom.png --bb --bb-upper-color "#ff6b9d" --bb-middle-color "#4ecdc4" --bb-lower-color "#ff6b9d" --bb-background-color "#ff6b9d" --bb-background-opacity 0.2
+npx @neabyte/chart-to-image -s BTC/USDT -o bb-line.png --bb --chart-type line --bb-upper-color "#9b59b6" --bb-middle-color "#f39c12" --bb-lower-color "#9b59b6" --bb-background-color "#9b59b6" --bb-background-opacity 0.25
+
+# All indicators together
+npx @neabyte/chart-to-image -s BTC/USDT -o all-indicators.png --vwap --ema --sma --bb
+
 # Chart comparison (side-by-side)
 npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --output comparison.png
 
@@ -100,6 +109,10 @@ npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --layout grid --custom
 
 # Comparison with indicators
 npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --vwap --ema --output comparison-indicators.png
+
+# Comparison with Bollinger Bands
+npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --bb --output comparison-bb.png
+npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --bb --bb-upper-color "#ff6b9d" --bb-middle-color "#4ecdc4" --bb-lower-color "#ff6b9d" --bb-background-color "#ff6b9d" --bb-background-opacity 0.2 --output comparison-bb-custom.png
 
 # Hide elements for clean charts
 npx @neabyte/chart-to-image -s ADA/USDT -o clean.png --hide-title --hide-time-axis --hide-grid
@@ -183,6 +196,45 @@ const indicatorResult = await generateChartImage({
   smaPeriod: 20
 })
 
+// Chart with Bollinger Bands
+const bbResult = await generateChartImage({
+  symbol: 'BTC/USDT',
+  timeframe: '1h',
+  outputPath: 'bb-chart.png',
+  showBollingerBands: true,
+  bbPeriod: 20,
+  bbStandardDeviations: 2,
+  bbColors: {
+    upper: '#ff6b9d',
+    middle: '#4ecdc4',
+    lower: '#ff6b9d',
+    background: '#ff6b9d',
+    backgroundOpacity: 0.2
+  }
+})
+
+// All indicators together
+const allIndicatorsResult = await generateChartImage({
+  symbol: 'BTC/USDT',
+  timeframe: '1h',
+  outputPath: 'all-indicators.png',
+  showVWAP: true,
+  showEMA: true,
+  emaPeriod: 20,
+  showSMA: true,
+  smaPeriod: 20,
+  showBollingerBands: true,
+  bbPeriod: 20,
+  bbStandardDeviations: 2,
+  bbColors: {
+    upper: '#ff6b9d',
+    middle: '#4ecdc4',
+    lower: '#ff6b9d',
+    background: '#ff6b9d',
+    backgroundOpacity: 0.2
+  }
+})
+
 // Comparison with indicators
 const comparisonWithIndicators = await ComparisonService.sideBySide(
   ['BTC/USDT', 'ETH/USDT'],
@@ -193,6 +245,24 @@ const comparisonWithIndicators = await ComparisonService.sideBySide(
     emaPeriod: 20,
     showSMA: true,
     smaPeriod: 20
+  }
+)
+
+// Comparison with Bollinger Bands
+const comparisonWithBB = await ComparisonService.sideBySide(
+  ['BTC/USDT', 'ETH/USDT'],
+  'comparison-bb.png',
+  {
+    showBollingerBands: true,
+    bbPeriod: 20,
+    bbStandardDeviations: 2,
+    bbColors: {
+      upper: '#ff6b9d',
+      middle: '#4ecdc4',
+      lower: '#ff6b9d',
+      background: '#ff6b9d',
+      backgroundOpacity: 0.2
+    }
   }
 )
 ```
@@ -261,59 +331,6 @@ const comparisonWithIndicators = await ComparisonService.sideBySide(
 ```
 
 ---
-
-## 📋 CLI Reference
-
-```bash
-# Basic Options
---symbol, -s <symbol>       Trading symbol (e.g., BTC/USDT)
---timeframe, -t <tf>        Timeframe (1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w)
---exchange, -e <ex>         Exchange (binance, coinbase, kraken, etc.)
---output, -o <path>         Output image path
---width, -w <px>            Chart width in pixels
---height, -h <px>           Chart height in pixels
-
-# Chart Types
---chart-type <type>         Chart type (candlestick, line, area, heikin-ashi, renko, line-break)
-
-# Themes & Colors
---theme <theme>             Theme (light, dark)
---background-color <color>  Background color (hex, rgb, name, gradient)
---text-color <color>        Text color (hex, rgb, name)
-
-# Custom Bar Colors
---custom-colors <colors>    Custom colors (format: type=color,type=color)
-
-# Horizontal Levels
---levels <levels>           Horizontal levels (format: value:color:style:label,value:color:style:label)
-
-# Chart Comparison
---compare <symbols>         Compare multiple symbols (format: symbol1,symbol2)
---layout <type>             Layout type (side-by-side, grid)
---columns <number>          Number of columns for grid layout (max 2)
---timeframes <timeframes>   Compare timeframes (format: 1h,4h,1d)
-
-# Technical Indicators
---vwap                      Show VWAP indicator
---ema                       Show EMA indicator (default: 20 period)
---sma                       Show SMA indicator (default: 20 period)
-
-# Hide Elements
---hide-title                Hide chart title
---hide-time-axis            Hide time axis labels
---hide-grid                 Hide grid lines
-
-# Scaling
---auto-scale                Enable auto-scaling
---scale-x <factor>          X-axis scale factor
---scale-y <factor>          Y-axis scale factor
---min-scale <price>         Minimum price scale
---max-scale <price>         Maximum price scale
-
-# Data Options
---fetch                     Fetch market data only
---limit <number>            Number of candles to fetch
-```
 
 ## 🏢 Supported Exchanges
 

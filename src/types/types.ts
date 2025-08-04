@@ -74,6 +74,25 @@ export interface ChartConfig {
   showSMA?: boolean
   /** SMA period for calculation */
   smaPeriod?: number
+  /** Whether to display Bollinger Bands indicator */
+  showBollingerBands?: boolean
+  /** Bollinger Bands period for calculation */
+  bbPeriod?: number
+  /** Bollinger Bands standard deviations (default: 2) */
+  bbStandardDeviations?: number
+  /** Custom colors for Bollinger Bands */
+  bbColors?: {
+    /** Color for upper band line */
+    upper?: string
+    /** Color for middle band line */
+    middle?: string
+    /** Color for lower band line */
+    lower?: string
+    /** Color for background fill between bands */
+    background?: string
+    /** Opacity for background fill (0-1) */
+    backgroundOpacity?: number
+  }
   /** Background color of the chart */
   backgroundColor?: string
   /** Text color for chart labels */
@@ -182,6 +201,25 @@ export interface ChartOptions {
   showSMA?: boolean
   /** SMA period for calculation */
   smaPeriod?: number
+  /** Whether to display Bollinger Bands indicator */
+  showBollingerBands?: boolean
+  /** Bollinger Bands period for calculation */
+  bbPeriod?: number
+  /** Bollinger Bands standard deviations (default: 2) */
+  bbStandardDeviations?: number
+  /** Custom colors for Bollinger Bands */
+  bbColors?: {
+    /** Color for upper band line */
+    upper?: string
+    /** Color for middle band line */
+    middle?: string
+    /** Color for lower band line */
+    lower?: string
+    /** Color for background fill between bands */
+    background?: string
+    /** Opacity for background fill (0-1) */
+    backgroundOpacity?: number
+  }
   /** Chart scaling configuration */
   scale?: {
     /** X-axis scale factor */

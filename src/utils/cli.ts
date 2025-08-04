@@ -38,6 +38,14 @@ export interface CLIArgs {
   emaPeriod?: number
   showSMA?: boolean
   smaPeriod?: number
+  showBollingerBands?: boolean
+  bbPeriod?: number
+  bbStandardDeviations?: number
+  bbUpperColor?: string
+  bbMiddleColor?: string
+  bbLowerColor?: string
+  bbBackgroundColor?: string
+  bbBackgroundOpacity?: number
   autoScale?: boolean
   scaleX?: number
   scaleY?: number
@@ -265,6 +273,45 @@ export function parseArgs(): CLIArgs {
         parsed.showSMA = true
         parsed.smaPeriod = 20
         break
+      case '--bb':
+      case '--bollinger-bands':
+        parsed.showBollingerBands = true
+        parsed.bbPeriod = 20
+        parsed.bbStandardDeviations = 2
+        break
+      case '--bb-upper-color':
+        if (nextArg && !nextArg.startsWith('-')) {
+          parsed.bbUpperColor = nextArg
+          i++
+        }
+        break
+      case '--bb-middle-color':
+        if (nextArg && !nextArg.startsWith('-')) {
+          parsed.bbMiddleColor = nextArg
+          i++
+        }
+        break
+      case '--bb-lower-color':
+        if (nextArg && !nextArg.startsWith('-')) {
+          parsed.bbLowerColor = nextArg
+          i++
+        }
+        break
+      case '--bb-background-color':
+        if (nextArg && !nextArg.startsWith('-')) {
+          parsed.bbBackgroundColor = nextArg
+          i++
+        }
+        break
+      case '--bb-background-opacity':
+        if (nextArg && !nextArg.startsWith('-')) {
+          const opacity = parseFloat(nextArg)
+          if (!isNaN(opacity) && opacity >= 0 && opacity <= 1) {
+            parsed.bbBackgroundOpacity = opacity
+            i++
+          }
+        }
+        break
       case '--background-color':
       case '--bg-color':
         if (nextArg && !nextArg.startsWith('-')) {
@@ -421,6 +468,12 @@ Optional Options:
   --vwap                          Show VWAP indicator
   --ema                           Show EMA indicator (default: 20 period)
   --sma                           Show SMA indicator (default: 20 period)
+  --bb                            Show Bollinger Bands indicator (default: 20 period, 2 std dev)
+  --bb-upper-color <color>        Upper band color (e.g., #ff6b6b)
+  --bb-middle-color <color>       Middle band color (e.g., #4ecdc4)
+  --bb-lower-color <color>        Lower band color (e.g., #ff6b6b)
+  --bb-background-color <color>   Background fill color (e.g., #ff6b6b)
+  --bb-background-opacity <0-1>   Background fill opacity (0.0-1.0, default: 0.1)
   --background-color <color>      Background color
   --text-color <color>            Text color
   --fetch                         Fetch fresh data
@@ -601,6 +654,9 @@ function addHideOptions(config: Record<string, unknown>, args: CLIArgs): void {
   if (args.emaPeriod) config.emaPeriod = args.emaPeriod
   if (args.showSMA) config.showSMA = true
   if (args.smaPeriod) config.smaPeriod = args.smaPeriod
+  if (args.showBollingerBands) config.showBollingerBands = true
+  if (args.bbPeriod) config.bbPeriod = args.bbPeriod
+  if (args.bbStandardDeviations) config.bbStandardDeviations = args.bbStandardDeviations
 }
 
 /**

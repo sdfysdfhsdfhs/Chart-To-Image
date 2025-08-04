@@ -142,6 +142,19 @@ async function main(): Promise<void> {
       configData.showSMA = true
       configData.smaPeriod = args.smaPeriod || 20
     }
+    if (args.showBollingerBands) {
+      configData.showBollingerBands = true
+      configData.bbPeriod = args.bbPeriod || 20
+      configData.bbStandardDeviations = args.bbStandardDeviations || 2
+      if (args.bbUpperColor || args.bbMiddleColor || args.bbLowerColor || args.bbBackgroundColor) {
+        configData.bbColors = {}
+        if (args.bbUpperColor) configData.bbColors.upper = args.bbUpperColor
+        if (args.bbMiddleColor) configData.bbColors.middle = args.bbMiddleColor
+        if (args.bbLowerColor) configData.bbColors.lower = args.bbLowerColor
+        if (args.bbBackgroundColor) configData.bbColors.background = args.bbBackgroundColor
+        if (args.bbBackgroundOpacity !== undefined) configData.bbColors.backgroundOpacity = args.bbBackgroundOpacity
+      }
+    }
     const config = new ChartConfig(configData)
     const renderer = new ChartRenderer(config)
     const result = await renderer.generateChart()
@@ -191,7 +204,18 @@ async function handleComparison(args: any): Promise<void> {
     showEMA: args.showEMA,
     emaPeriod: args.emaPeriod,
     showSMA: args.showSMA,
-    smaPeriod: args.smaPeriod
+    smaPeriod: args.smaPeriod,
+    showBollingerBands: args.showBollingerBands,
+    bbPeriod: args.bbPeriod,
+    bbStandardDeviations: args.bbStandardDeviations
+  }
+  if (args.showBollingerBands && (args.bbUpperColor || args.bbMiddleColor || args.bbLowerColor || args.bbBackgroundColor)) {
+    comparisonConfig.bbColors = {}
+    if (args.bbUpperColor) comparisonConfig.bbColors.upper = args.bbUpperColor
+    if (args.bbMiddleColor) comparisonConfig.bbColors.middle = args.bbMiddleColor
+    if (args.bbLowerColor) comparisonConfig.bbColors.lower = args.bbLowerColor
+    if (args.bbBackgroundColor) comparisonConfig.bbColors.background = args.bbBackgroundColor
+    if (args.bbBackgroundOpacity !== undefined) comparisonConfig.bbColors.backgroundOpacity = args.bbBackgroundOpacity
   }
   if (args.customColors) {
     const colorParts = args.customColors.split(',')

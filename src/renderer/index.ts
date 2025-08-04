@@ -23,6 +23,7 @@ import {
   VWAPRenderer,
   EMARenderer,
   SMARenderer,
+  BollingerBandsRenderer,
   LevelsRenderer,
   TitleRenderer,
   WatermarkRenderer
@@ -116,6 +117,17 @@ export class NodeChartRenderer {
       chartHeight
     }
     const priceRange = calculatePriceRange(ohlc, config)
+    if (config.showBollingerBands && config.bbPeriod) {
+      const bbRenderer = new BollingerBandsRenderer(
+        this.ctx,
+        dimensions,
+        priceRange,
+        config,
+        config.bbPeriod,
+        config.bbStandardDeviations || 2
+      )
+      bbRenderer.renderBackground(ohlc)
+    }
     this.drawChartType(ohlc, dimensions, priceRange, config)
     if (config.showVWAP && hasVolumeData(ohlc)) {
       const vwapRenderer = new VWAPRenderer(this.ctx, dimensions, priceRange, config)
@@ -128,6 +140,17 @@ export class NodeChartRenderer {
     if (config.showSMA && config.smaPeriod) {
       const smaRenderer = new SMARenderer(this.ctx, dimensions, priceRange, config, config.smaPeriod)
       smaRenderer.render(ohlc)
+    }
+    if (config.showBollingerBands && config.bbPeriod) {
+      const bbRenderer = new BollingerBandsRenderer(
+        this.ctx,
+        dimensions,
+        priceRange,
+        config,
+        config.bbPeriod,
+        config.bbStandardDeviations || 2
+      )
+      bbRenderer.renderLines(ohlc)
     }
     if (this.chartData.levels) {
       const levelsRenderer = new LevelsRenderer(this.ctx, dimensions, priceRange)

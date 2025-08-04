@@ -49,7 +49,8 @@ Complete guide to using Chart-To-Image CLI and API with all features and example
 | `VWAP` | Volume Weighted Average Price | Institutional analysis | `--vwap` |
 | `EMA` | Exponential Moving Average | Trend analysis | `--ema` |
 | `SMA` | Simple Moving Average | Trend analysis | `--sma` |
-| `Combined` | VWAP + EMA + SMA together | Comprehensive analysis | `--vwap --ema --sma` |
+| `Bollinger Bands` | Volatility and trend analysis | Support/resistance levels | `--bb` |
+| `Combined` | VWAP + EMA + SMA + BB together | Comprehensive analysis | `--vwap --ema --sma --bb` |
 
 **VWAP Features:**
 - Institutional standard calculation
@@ -69,6 +70,16 @@ Complete guide to using Chart-To-Image CLI and API with all features and example
 - Teal line visualization
 - Standard moving average calculation
 
+**Bollinger Bands Features:**
+- Configurable periods (default: 20)
+- Configurable standard deviations (default: 2)
+- Three bands: Upper (resistance), Middle (SMA), Lower (support)
+- Custom colors for each band
+- Background fill between bands with configurable opacity
+- Works on all chart types (candlestick, line, area, heikin-ashi, renko)
+- Dashed lines for upper/lower bands, solid line for middle band
+- Support for comparison charts
+
 **Combined Usage:**
 ```bash
 # Single indicator
@@ -80,9 +91,23 @@ npx @neabyte/chart-to-image -s BTC/USDT --sma
 npx @neabyte/chart-to-image -s BTC/USDT --vwap --ema
 npx @neabyte/chart-to-image -s BTC/USDT --vwap --ema --sma
 
+# Bollinger Bands
+npx @neabyte/chart-to-image -s BTC/USDT --bb
+npx @neabyte/chart-to-image -s ETH/USDT --bb --bb-period 20 --bb-standard-deviations 2
+
+# Bollinger Bands with custom colors
+npx @neabyte/chart-to-image -s BTC/USDT --bb --bb-upper-color "#ff6b9d" --bb-middle-color "#4ecdc4" --bb-lower-color "#ff6b9d"
+npx @neabyte/chart-to-image -s ETH/USDT --bb --bb-background-color "#ff6b9d" --bb-background-opacity 0.2
+
+# All indicators together
+npx @neabyte/chart-to-image -s BTC/USDT --vwap --ema --sma --bb
+npx @neabyte/chart-to-image -s ETH/USDT --vwap --ema --sma --bb --bb-upper-color "#ff6b9d" --bb-middle-color "#4ecdc4" --bb-lower-color "#ff6b9d" --bb-background-color "#ff6b9d" --bb-background-opacity 0.2
+
 # In comparison charts
 npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --vwap --ema
 npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --vwap --ema --sma
+npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --bb
+npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --bb --bb-upper-color "#ff6b9d" --bb-middle-color "#4ecdc4" --bb-lower-color "#ff6b9d" --bb-background-color "#ff6b9d" --bb-background-opacity 0.2
 ```
 
 ### 🔄 Chart Comparison
@@ -234,6 +259,15 @@ npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --layout grid \
 npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --vwap --ema \
   --output comparison-indicators.png
 
+# Comparison with Bollinger Bands
+npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --bb --output comparison-bb.png
+
+# Comparison with custom Bollinger Bands colors
+npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT" --bb \
+  --bb-upper-color "#ff6b9d" --bb-middle-color "#4ecdc4" --bb-lower-color "#ff6b9d" \
+  --bb-background-color "#ff6b9d" --bb-background-opacity 0.2 \
+  --output comparison-bb-custom.png
+
 # Multiple symbols comparison
 npx @neabyte/chart-to-image --compare "BTC/USDT,ETH/USDT,ADA/USDT" --output multi-comparison.png
 ```
@@ -252,6 +286,65 @@ npx @neabyte/chart-to-image --compare "ETH/USDT,ETH/USDT,ETH/USDT,ETH/USDT" \
 # Heikin-Ashi timeframe comparison
 npx @neabyte/chart-to-image --compare "BTC/USDT,BTC/USDT" --timeframes "1h,4h" \
   --chart-type heikin-ashi --output ha-timeframes.png
+
+# Timeframe comparison with Bollinger Bands
+npx @neabyte/chart-to-image --compare "BTC/USDT,BTC/USDT" --timeframes "1h,4h" \
+  --bb --output timeframe-bb.png
+
+# Timeframe comparison with custom Bollinger Bands
+npx @neabyte/chart-to-image --compare "ETH/USDT,ETH/USDT" --timeframes "1h,4h" \
+  --bb --bb-upper-color "#ff6b9d" --bb-middle-color "#4ecdc4" --bb-lower-color "#ff6b9d" \
+  --bb-background-color "#ff6b9d" --bb-background-opacity 0.2 \
+  --output timeframe-bb-custom.png
+```
+
+### 📊 Bollinger Bands
+
+```bash
+# Basic Bollinger Bands
+npx @neabyte/chart-to-image --symbol BTC/USDT --timeframe 1h --output bb-basic.png --bb
+
+# Custom period and standard deviations
+npx @neabyte/chart-to-image --symbol ETH/USDT --timeframe 4h --output bb-custom.png \
+  --bb --bb-period 20 --bb-standard-deviations 2
+
+# Custom colors for bands
+npx @neabyte/chart-to-image --symbol BTC/USDT --timeframe 1h --output bb-colors.png \
+  --bb --bb-upper-color "#ff6b9d" --bb-middle-color "#4ecdc4" --bb-lower-color "#ff6b9d"
+
+# Background fill between bands
+npx @neabyte/chart-to-image --symbol ETH/USDT --timeframe 4h --output bb-background.png \
+  --bb --bb-background-color "#ff6b9d" --bb-background-opacity 0.2
+
+# Complete custom Bollinger Bands
+npx @neabyte/chart-to-image --symbol BTC/USDT --timeframe 1h --output bb-complete.png \
+  --bb --bb-period 20 --bb-standard-deviations 2 \
+  --bb-upper-color "#ff6b9d" --bb-middle-color "#4ecdc4" --bb-lower-color "#ff6b9d" \
+  --bb-background-color "#ff6b9d" --bb-background-opacity 0.2
+
+# Bollinger Bands on different chart types
+npx @neabyte/chart-to-image --symbol BTC/USDT --timeframe 1h --output bb-line.png \
+  --bb --chart-type line --bb-upper-color "#9b59b6" --bb-middle-color "#f39c12" --bb-lower-color "#9b59b6" \
+  --bb-background-color "#9b59b6" --bb-background-opacity 0.25
+
+npx @neabyte/chart-to-image --symbol ETH/USDT --timeframe 4h --output bb-area.png \
+  --bb --chart-type area --bb-upper-color "#e74c3c" --bb-middle-color "#2ecc71" --bb-lower-color "#e74c3c" \
+  --bb-background-color "#e74c3c" --bb-background-opacity 0.15
+
+npx @neabyte/chart-to-image --symbol BTC/USDT --timeframe 1d --output bb-heikin.png \
+  --bb --chart-type heikin-ashi --bb-upper-color "#8e44ad" --bb-middle-color "#e67e22" --bb-lower-color "#8e44ad" \
+  --bb-background-color "#8e44ad" --bb-background-opacity 0.22
+
+# Bollinger Bands with other indicators
+npx @neabyte/chart-to-image --symbol BTC/USDT --timeframe 1h --output bb-vwap.png \
+  --bb --vwap --bb-upper-color "#ff6b9d" --bb-middle-color "#4ecdc4" --bb-lower-color "#ff6b9d"
+
+npx @neabyte/chart-to-image --symbol ETH/USDT --timeframe 4h --output bb-ema.png \
+  --bb --ema --bb-upper-color "#9b59b6" --bb-middle-color "#f39c12" --bb-lower-color "#9b59b6"
+
+npx @neabyte/chart-to-image --symbol BTC/USDT --timeframe 1h --output bb-all.png \
+  --bb --vwap --ema --sma --bb-upper-color "#ff6b9d" --bb-middle-color "#4ecdc4" --bb-lower-color "#ff6b9d" \
+  --bb-background-color "#ff6b9d" --bb-background-opacity 0.2
 ```
 
 ### 📈 Horizontal Levels

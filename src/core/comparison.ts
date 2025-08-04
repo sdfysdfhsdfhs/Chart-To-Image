@@ -52,6 +52,25 @@ export interface ComparisonConfig {
   showSMA?: boolean
   /** SMA period for calculation */
   smaPeriod?: number
+  /** Whether to display Bollinger Bands indicator */
+  showBollingerBands?: boolean
+  /** Bollinger Bands period for calculation */
+  bbPeriod?: number
+  /** Bollinger Bands standard deviations (default: 2) */
+  bbStandardDeviations?: number
+  /** Bollinger Bands colors for customization */
+  bbColors?: {
+    /** Color for upper band */
+    upper?: string
+    /** Color for middle band */
+    middle?: string
+    /** Color for lower band */
+    lower?: string
+    /** Color for background fill */
+    background?: string
+    /** Opacity for background fill (0.0-1.0) */
+    backgroundOpacity?: number
+  }
   /** Output file path for saving the comparison */
   outputPath?: string
   /** Custom colors for chart bars and elements */
@@ -331,7 +350,13 @@ export class ComparisonService {
         showEMA: this.config.showEMA === true,
         ...(this.config.emaPeriod !== undefined && { emaPeriod: this.config.emaPeriod }),
         showSMA: this.config.showSMA === true,
-        ...(this.config.smaPeriod !== undefined && { smaPeriod: this.config.smaPeriod })
+        ...(this.config.smaPeriod !== undefined && { smaPeriod: this.config.smaPeriod }),
+        showBollingerBands: this.config.showBollingerBands === true,
+        ...(this.config.bbPeriod !== undefined && { bbPeriod: this.config.bbPeriod }),
+        ...(this.config.bbStandardDeviations !== undefined && {
+          bbStandardDeviations: this.config.bbStandardDeviations
+        }),
+        ...(this.config.bbColors !== undefined && { bbColors: this.config.bbColors })
       }
     }
   }

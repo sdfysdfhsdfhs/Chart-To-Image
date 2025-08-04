@@ -15,15 +15,15 @@ import type { ChartConfig as IChartConfig, Timeframe, HorizontalLevel, Watermark
  * Manages all chart settings and validation
  */
 export class ChartConfig implements IChartConfig {
-  public symbol: string
-  public timeframe: string
+  public symbol!: string
+  public timeframe!: string
   public exchange?: string
-  public outputPath: string
-  public width: number
-  public height: number
-  public theme: 'light' | 'dark'
-  public chartType: 'candlestick' | 'line' | 'area' | 'heikin-ashi' | 'renko' | 'line-break'
-  public indicators: string[]
+  public outputPath!: string
+  public width!: number
+  public height!: number
+  public theme!: 'light' | 'dark'
+  public chartType!: 'candlestick' | 'line' | 'area' | 'heikin-ashi' | 'renko' | 'line-break'
+  public indicators!: string[]
   public watermark?: string | WatermarkConfig
   public customBarColors?: {
     bullish?: string
@@ -41,6 +41,16 @@ export class ChartConfig implements IChartConfig {
   public emaPeriod?: number
   public showSMA?: boolean
   public smaPeriod?: number
+  public showBollingerBands?: boolean
+  public bbPeriod?: number
+  public bbStandardDeviations?: number
+  public bbColors?: {
+    upper?: string
+    middle?: string
+    lower?: string
+    background?: string
+    backgroundOpacity?: number
+  }
   public backgroundColor?: string
   public textColor?: string
 
@@ -49,6 +59,16 @@ export class ChartConfig implements IChartConfig {
    * @param config - Partial configuration object
    */
   constructor(config: Partial<IChartConfig>) {
+    this.assignBasicProperties(config)
+    this.assignOptionalProperties(config)
+    this.validate()
+  }
+
+  /**
+   * Assigns basic required properties with defaults
+   * @param config - Partial configuration object
+   */
+  private assignBasicProperties(config: Partial<IChartConfig>): void {
     this.symbol = config.symbol || 'BTC/USDT'
     this.timeframe = config.timeframe || '1h'
     this.exchange = config.exchange || 'binance'
@@ -58,6 +78,23 @@ export class ChartConfig implements IChartConfig {
     this.theme = config.theme || 'dark'
     this.chartType = (config.chartType as 'candlestick' | 'line' | 'area' | 'heikin-ashi' | 'renko') || 'candlestick'
     this.indicators = config.indicators || []
+  }
+
+  /**
+   * Assigns optional properties if provided
+   * @param config - Partial configuration object
+   */
+  private assignOptionalProperties(config: Partial<IChartConfig>): void {
+    this.assignDisplayProperties(config)
+    this.assignIndicatorProperties(config)
+    this.assignStylingProperties(config)
+  }
+
+  /**
+   * Assigns display-related properties
+   * @param config - Partial configuration object
+   */
+  private assignDisplayProperties(config: Partial<IChartConfig>): void {
     if (config.customBarColors !== undefined) {
       this.customBarColors = config.customBarColors
     }
@@ -76,6 +113,16 @@ export class ChartConfig implements IChartConfig {
     if (config.showGrid !== undefined) {
       this.showGrid = config.showGrid
     }
+    if (config.watermark !== undefined) {
+      this.watermark = config.watermark
+    }
+  }
+
+  /**
+   * Assigns indicator-related properties
+   * @param config - Partial configuration object
+   */
+  private assignIndicatorProperties(config: Partial<IChartConfig>): void {
     if (config.showVWAP !== undefined) {
       this.showVWAP = config.showVWAP
     }
@@ -91,16 +138,31 @@ export class ChartConfig implements IChartConfig {
     if (config.smaPeriod !== undefined) {
       this.smaPeriod = config.smaPeriod
     }
+    if (config.showBollingerBands !== undefined) {
+      this.showBollingerBands = config.showBollingerBands
+    }
+    if (config.bbPeriod !== undefined) {
+      this.bbPeriod = config.bbPeriod
+    }
+    if (config.bbStandardDeviations !== undefined) {
+      this.bbStandardDeviations = config.bbStandardDeviations
+    }
+    if (config.bbColors !== undefined) {
+      this.bbColors = config.bbColors
+    }
+  }
+
+  /**
+   * Assigns styling-related properties
+   * @param config - Partial configuration object
+   */
+  private assignStylingProperties(config: Partial<IChartConfig>): void {
     if (config.backgroundColor !== undefined) {
       this.backgroundColor = config.backgroundColor
     }
     if (config.textColor !== undefined) {
       this.textColor = config.textColor
     }
-    if (config.watermark !== undefined) {
-      this.watermark = config.watermark
-    }
-    this.validate()
   }
 
   /**
